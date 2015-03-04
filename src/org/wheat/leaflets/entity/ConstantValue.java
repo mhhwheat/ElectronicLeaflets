@@ -17,7 +17,7 @@ package org.wheat.leaflets.entity;
 *
  */
 public class ConstantValue {
-	public static String HttpRoot="http://120.24.161.139:8080/BeautyRankingServer/";
+	public static String HttpRoot="http://120.24.161.139:8000/leaflet/api/";
 	/**
 	 * 失败的人生有千百种，成功的人生只有一种（更新失败）
 	 */
@@ -55,4 +55,7 @@ public class ConstantValue {
 	
 	//成功状态
 	public static int operateSuccess=1000;
+	
+	//用户登录失败
+	public static int loginFail=1021;
 }

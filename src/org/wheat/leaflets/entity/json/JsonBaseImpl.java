@@ -2,7 +2,6 @@ package org.wheat.leaflets.entity.json;
 
 import java.io.Serializable;
 
-import org.wheat.leaflets.entity.ErrMsg;
 import org.wheat.leaflets.httptools.JsonTools;
 
 import com.google.gson.annotations.SerializedName;
@@ -28,7 +27,7 @@ public class JsonBaseImpl <T> implements JsonBase<T>,Serializable
 	  	private T mData;
 
 	  	@SerializedName("err")
-	  	private ErrMsg mErrMsg;
+	  	private String mErrMsg;
 
 	  	@Override
 	  	public int getCode() {
@@ -50,27 +49,14 @@ public class JsonBaseImpl <T> implements JsonBase<T>,Serializable
 	        mData = data;
 	    }
 
-	    public ErrMsg getErrMsg() {
-	        return mErrMsg;
-	    }
-
-	    public void setErrMsg(ErrMsg errMsg) {
-	        mErrMsg = errMsg;
-	    }
-
 	    @Override
 	    public String getMsg() {
-	        if (mErrMsg != null) {
-	            return mErrMsg.getMsg();
-	        }
-	        return "";
+	        return mErrMsg;
 	    }
 
 	    @Override
 	    public void setMsg(String msg) {
-	        if (mErrMsg != null) {
-	            mErrMsg.setMsg(msg);
-	        }
+	    	this.mErrMsg=msg;
 	    }
 
 	    @Override
