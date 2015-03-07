@@ -204,6 +204,7 @@ public class HttpConnectTools
         //开始请求
         HttpResponse rsp=httpClient.execute(httpPost);
         
+        
         String result=getStringContentFromHttpResponse(rsp);
         
         return result;
@@ -460,8 +461,8 @@ public class HttpConnectTools
 		HttpParams params = new BasicHttpParams();
 		
 
-        // 设置http超时(30秒)
-        HttpConnectionParams.setConnectionTimeout(params, 2*1000);
+        // 设置http超时(10秒)
+        HttpConnectionParams.setConnectionTimeout(params, 10*1000);
 
         // 设置socket超时(15秒)->(30秒)-2013-05-14 等待数据时间
         HttpConnectionParams.setSoTimeout(params, 30*1000);

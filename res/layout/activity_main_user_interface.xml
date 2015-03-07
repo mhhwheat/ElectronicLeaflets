@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    
+    
+    <LinearLayout
+        android:id="@+id/main_radio"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/tab_ground"
+        android:gravity="bottom"
+        android:orientation="horizontal" 
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:id="@+id/tab_neighbor_page"
+            style="@style/tab_layout_style" >
+
+            <ImageView
+                android:id="@+id/tab_neighbor_page_img"
+                style="@style/tab_img_style"
+                android:src="@drawable/neighbor" />
+
+            <TextView
+                android:id="@+id/tab_neighbor_page_text"
+                style="@style/tab_text_style"
+                android:text="附近" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tab_find_page"
+            style="@style/tab_layout_style" >
+
+            <ImageView
+                android:id="@+id/tab_find_page_img"
+                style="@style/tab_img_style"
+                android:src="@drawable/found" />
+
+            <TextView
+                android:id="@+id/tab_find_page_text"
+                style="@style/tab_text_style"
+                android:text="发现" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tab_mine_page"
+            style="@style/tab_layout_style" >
+
+            <ImageView
+                android:id="@+id/tab_mine_page_img"
+                style="@style/tab_img_style"
+                android:src="@drawable/mine" />
+
+            <TextView
+                android:id="@+id/tab_mine_page_text"
+                style="@style/tab_text_style"
+                android:text="我的" />
+        </LinearLayout>
+    </LinearLayout>
+    
+    <android.support.v4.view.ViewPager
+        android:id="@+id/main_user_interface_view_pager"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFFFF"
+    	android:flipInterval="30"
+    	android:persistentDrawingCache="animation"
+    	android:layout_above="@id/main_radio"/>
+
+</RelativeLayout>

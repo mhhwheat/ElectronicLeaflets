@@ -2,11 +2,13 @@ package org.wheat.leaflets.activity;
 
 
 import org.wheat.electronicleaflets.R;
-import org.wheat.leaflets.coders.Coder_Md5;
+import org.wheat.leaflets.entity.UserName;
 import org.wheat.leaflets.entity.json.LoginMsgJson;
+import org.wheat.leaflets.entity.json.UserNameJson;
 import org.wheat.leaflets.loader.LoginAndRegister;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,7 +54,20 @@ public class LoginActivity extends Activity
 				new LoginTask(etEmail.getText().toString(), etPassword.getText().toString()).execute();
 			}
 		});
+		
+		tvRegister.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent=new Intent(LoginActivity.this,RegisterChoiceActivity.class);
+				startActivity(intent);
+			}
+		});
+		
+		
 	}
+	
+	
 	
 	private class LoginTask extends AsyncTask<Void, Void, LoginMsgJson>
 	{
@@ -69,7 +84,7 @@ public class LoginActivity extends Activity
 		protected LoginMsgJson doInBackground(Void... params) {
 			LoginMsgJson loginMsgJson=null;
 			try {
-				loginMsgJson=LoginAndRegister.synLogin(strEmail, Coder_Md5.md5(strPassword));
+				loginMsgJson=LoginAndRegister.synLogin(strEmail, strPassword);
 //				LoginAndRegister.login();
 			} catch (Throwable e) {
 				e.printStackTrace();

@@ -1,7 +1,9 @@
 package org.wheat.leaflets.entity.json;
 
-import org.wheat.leaflets.entity.CommentList;
+import java.util.List;
 
-public class CommentListJson extends JsonBaseImpl<CommentList>{
+import org.wheat.leaflets.entity.Comment;
+
+public class CommentListJson extends JsonBaseImpl<List<Comment>>{
 
 }

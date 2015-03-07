@@ -11,11 +11,11 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <EditText
+        android:id="@+id/etRegister_Email"
         android:layout_marginTop="30dp"
-        android:hint="邮箱"
+        android:hint="用户邮箱"
         android:textSize="17sp"
         android:gravity="center"
-        android:id="@+id/login_user_id"
         android:layout_width="fill_parent"
         android:layout_height="45dp"
         android:layout_marginLeft="15dp"
@@ -23,8 +23,8 @@
         android:background="@drawable/loginedittextbackground"
         android:inputType="textEmailAddress"/>
     <EditText
+        android:id="@+id/etRegister_password"
         android:hint="密码"
-        android:id="@+id/login_pwd"
         android:password="true"
         android:textSize="17sp"
         android:layout_marginStart="10dp"
@@ -35,44 +35,49 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="@drawable/loginedittextbackground"/>
+    <EditText
+        android:id="@+id/etRegister_nickname"
+        android:hint="昵称"
+        android:textSize="17sp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/loginedittextbackground"/>
     
     
     <Button
-        android:id="@+id/btLogin"
+        android:id="@+id/btRegister"
         android:layout_marginTop="30dp"
         android:layout_width="fill_parent"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_height="45dp"
-        android:text="登录"
+        android:text="注册"
         android:textSize="22sp"
         android:gravity="center"
         android:background="@drawable/loginbuttonbackground"/>
    </LinearLayout>
     
-    <LinearLayout
-        android:layout_below="@id/line1"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="30dp"
-        android:layout_marginTop="20dp">
+   <TextView
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_below="@id/line1"
+       android:layout_margin="15dp"
+       android:gravity="center"
+       android:hint="点击注册即表示同意leaflets用户协议"/>
     <TextView 
-        android:clickable="true"
-        android:layout_marginLeft="15dp"
-        android:text="忘记密码?"
+        android:id="@+id/register_reprofile"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"/>
-    <TextView
-        android:id="@+id/tvRegister"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:text="使用协议"
         android:clickable="true"
-        android:text="快速注册>>"
-        android:layout_marginRight="15dp"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="right"
-        android:layout_weight="1"/>
-        
-    </LinearLayout>
-"
+        android:gravity="center"
+        android:textColorLink="@color/blueviolet"/>
+
 </RelativeLayout>

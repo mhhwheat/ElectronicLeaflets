@@ -18,6 +18,7 @@ package org.wheat.leaflets.entity;
  */
 public class ConstantValue {
 	public static String HttpRoot="http://120.24.161.139:8000/leaflet/api/";
+//	public static String HttpRoot="http://120.24.161.139/project/mysite/leaflet/api/";
 	/**
 	 * 失败的人生有千百种，成功的人生只有一种（更新失败）
 	 */
