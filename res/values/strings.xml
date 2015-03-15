@@ -1,5 +1,9 @@
 <resources>
 
-    <string name="app_name">ElectronicLeaflets</string>
+    <string name="app_name">电子传单</string>
 
+    
+    <string name="list_footer_more">更多</string>
+    <string name="list_footer_loading">正在加载</string>
+    <string name="list_footer_no_more">查看更多</string>
 </resources>

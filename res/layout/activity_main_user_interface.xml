@@ -22,7 +22,7 @@
             <ImageView
                 android:id="@+id/tab_neighbor_page_img"
                 style="@style/tab_img_style"
-                android:src="@drawable/neighbor" />
+                android:src="@drawable/tab_neighbor_transition" />
 
             <TextView
                 android:id="@+id/tab_neighbor_page_text"
@@ -37,7 +37,7 @@
             <ImageView
                 android:id="@+id/tab_find_page_img"
                 style="@style/tab_img_style"
-                android:src="@drawable/found" />
+                android:src="@drawable/tab_find_transition" />
 
             <TextView
                 android:id="@+id/tab_find_page_text"
@@ -52,7 +52,7 @@
             <ImageView
                 android:id="@+id/tab_mine_page_img"
                 style="@style/tab_img_style"
-                android:src="@drawable/mine" />
+                android:src="@drawable/tab_mine_transition" />
 
             <TextView
                 android:id="@+id/tab_mine_page_text"

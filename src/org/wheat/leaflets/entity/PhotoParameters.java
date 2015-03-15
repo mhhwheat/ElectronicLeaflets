@@ -7,9 +7,13 @@ public class PhotoParameters
 	private int maxNumOfPixels;
 	private boolean mFixWidth;
 	private int mImageViewWidth;
-	public PhotoParameters(String url,int minSideLength,int maxNumOfPixels)
+	/**
+	 * photoType的值:"primary" or "secondary" or "seller_logo" or "user_portrait"
+	 */
+	private String photoType;
+	public PhotoParameters(String url,int minSideLength,int maxNumOfPixels,String photoType)
 	{
-		this(url,minSideLength,maxNumOfPixels,false,0);
+		this(url,minSideLength,maxNumOfPixels,false,0,photoType);
 	}
 	
 	/**
@@ -19,14 +23,16 @@ public class PhotoParameters
 	 * @param maxNumOfPixels	图片的总像素
 	 * @param fixWidth			是否保持图片的高宽比例，如果为true，imageViewWidth不能小于0，如果fixWidth为false，imageViewWidth参数无效
 	 * @param imageViewWidth	图片所在ImageView的宽度
+	 * @param isPrimary   		求情的图片类型（seller_logo,primary,secondary）
 	 */
-	public PhotoParameters(String url,int minSideLength,int maxNumOfPixels,boolean fixWidth,int imageViewWidth)
+	public PhotoParameters(String url,int minSideLength,int maxNumOfPixels,boolean fixWidth,int imageViewWidth,String photoType)
 	{
 		this.url=url;
 		this.minSideLength=minSideLength;
 		this.maxNumOfPixels=maxNumOfPixels;
 		this.mFixWidth=fixWidth;
 		this.mImageViewWidth=imageViewWidth;
+		this.photoType=photoType;
 	}
 	
 	public String getUrl()
@@ -78,4 +84,16 @@ public class PhotoParameters
 	{
 		return this.mImageViewWidth;
 	}
+
+	public String getPhotoType() {
+		return photoType;
+	}
+
+	public void setPhotoType(String photoType) {
+		this.photoType = photoType;
+	}
+
+	
+	
+	
 }

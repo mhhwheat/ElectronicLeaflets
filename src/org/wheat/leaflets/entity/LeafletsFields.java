@@ -6,6 +6,10 @@
  */ 
 package org.wheat.leaflets.entity;
 
+import java.util.Date;
+
+import org.wheat.leaflets.basic.UTCtoLocal;
+
 import com.google.gson.annotations.SerializedName;
 
 /** 
@@ -16,7 +20,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class LeafletsFields 
 {
-	@SerializedName("publish_time")
+	@SerializedName("published_time")
 	private String publishTime;
 	
 	@SerializedName("seller_name")
@@ -38,7 +42,7 @@ public class LeafletsFields
 	 * 简要传单的路径名
 	 */
 	@SerializedName("p_leaflet_name")
-	private String briefLeafletName;
+	private String briefLeafletPath;
 	
 	@SerializedName("end_time")
 	private String endTime;
@@ -52,10 +56,33 @@ public class LeafletsFields
 	@SerializedName("type")
 	private String leafletType;
 	
+	@SerializedName("comment")
+	private int commentTimes;
+	
+	@SerializedName("seller_logo_name")
+	private String sellerLogoPath;
+	
+	/**
+	 * 坐标
+	 */
+	@SerializedName("lat")
+	private double lat;
+	
+	/**
+	 * 坐标
+	 */
+	@SerializedName("lng")
+	private double lng;
+	
+	/**
+	 * 该传单的活动地点与用户之间的距离
+	 */
+	@SerializedName("distance")
+	private double distance;
 	
 
-	public String getPublishTime() {
-		return publishTime;
+	public Date getPublishTime() {
+		return UTCtoLocal.utc2LocalDate(this.publishTime);
 	}
 
 	public void setPublishTime(String publishTime) {
@@ -86,12 +113,12 @@ public class LeafletsFields
 		this.leafletPath = leafletPath;
 	}
 
-	public String getBriefLeafletName() {
-		return briefLeafletName;
+	public String getBriefLeafletPath() {
+		return briefLeafletPath;
 	}
 
-	public void setBriefLeafletName(String briefLeafletName) {
-		this.briefLeafletName = briefLeafletName;
+	public void setBriefLeafletPath(String briefLeafletPath) {
+		this.briefLeafletPath = briefLeafletPath;
 	}
 
 	public String getEndTime() {
@@ -118,7 +145,45 @@ public class LeafletsFields
 		this.leafletType = leafletType;
 	}
 	
+	public int getCommentTimes() {
+		return commentTimes;
+	}
+
+	public void setCommentTimes(int commentTimes) {
+		this.commentTimes = commentTimes;
+	}
+
+	public String getSellerLogoPath() {
+		return sellerLogoPath;
+	}
+
+	public void setSellerLogoPath(String sellerLogoPath) {
+		this.sellerLogoPath = sellerLogoPath;
+	}
 	
+	public double getLat() {
+		return lat;
+	}
+
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLng() {
+		return lng;
+	}
+
+	public void setLng(double lng) {
+		this.lng = lng;
+	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
 	
 	
 }

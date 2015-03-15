@@ -40,12 +40,29 @@ public class UTCtoLocal
 		return localTime;
 	}
 	
+	public static String utc2Local(String utcTime,String localTimePatten)
+	{
+		String utcTimePatten="yyyy-MM-dd'T'HH:mm:ss'Z'";
+		SimpleDateFormat utcFormater = new SimpleDateFormat(utcTimePatten);
+		utcFormater.setTimeZone(TimeZone.getTimeZone("UTC"));
+		Date gpsUTCDate = null;
+		try {
+			gpsUTCDate = utcFormater.parse(utcTime);
+		} catch (ParseException e) {
+		e.printStackTrace();
+		}
+		SimpleDateFormat localFormater = new SimpleDateFormat(localTimePatten);
+		localFormater.setTimeZone(TimeZone.getDefault());
+		String localTime = localFormater.format(gpsUTCDate.getTime());
+		return localTime;
+	}
+	
 	/**
 	 * 默认的utc时间是iso 8601格式，默认要转为当地时间的格式是yyyy-MM-dd HH:mm:ss
 	 * @param utcTime
 	 * @return
 	 */
-	public static String ust2Local(String utcTime)
+	public static String utc2Local(String utcTime)
 	{
 		String utcTimePatten="yyyy-MM-dd'T'HH:mm:ss'Z'";
 		String localTimePatten="yyyy-MM-dd HH:mm:ss";
@@ -62,5 +79,21 @@ public class UTCtoLocal
 		String localTime = localFormater.format(gpsUTCDate.getTime());
 		return localTime;
 		
+	}
+	
+	
+	
+	public static Date utc2LocalDate(String utcTime)
+	{
+		String utcTimePatten="yyyy-MM-dd'T'HH:mm:ss'Z'";
+		SimpleDateFormat utcFormater = new SimpleDateFormat(utcTimePatten);
+		utcFormater.setTimeZone(TimeZone.getTimeZone("UTC"));
+		Date gpsUTCDate = null;
+		try {
+			gpsUTCDate = utcFormater.parse(utcTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return gpsUTCDate;
 	}
 }

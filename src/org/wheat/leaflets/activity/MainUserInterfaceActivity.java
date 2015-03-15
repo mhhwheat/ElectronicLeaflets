@@ -19,6 +19,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,7 +47,10 @@ public class MainUserInterfaceActivity extends FragmentActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);  
 		setContentView(R.layout.activity_main_user_interface);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.fragment_neighbor_title); 
 		initViewPageTab();
 		InitViewPager();
 	}
@@ -105,6 +109,7 @@ public class MainUserInterfaceActivity extends FragmentActivity
 		//∏¯ViewPager…Ë÷√  ≈‰∆˜ 
 		mViewPager.setAdapter(new MainFragmentPagerAdapter(this.getSupportFragmentManager(), fragmentList));
 		mViewPager.setCurrentItem(0);
+		mViewPager.setOnPageChangeListener(new MainPageChangeListener());
 		checkTab(0);
 	}
 	
@@ -113,17 +118,17 @@ public class MainUserInterfaceActivity extends FragmentActivity
 		switch(index)
 		{
 		case 0:
-			tabNeighborTransition.startTransition(1000);
+			tabNeighborTransition.startTransition(100);
 			mNeighborPageText.setTextColor(getResources().getColor(R.color.green));
 			mViewPager.setCurrentItem(0);
 			break;
 		case 1:
-			tabFindTransition.startTransition(1000);
+			tabFindTransition.startTransition(100);
 			mFindPageText.setTextColor(getResources().getColor(R.color.green));
 			mViewPager.setCurrentItem(1);
 			break;
 		case 2:
-			tabMineTransition.startTransition(1000);
+			tabMineTransition.startTransition(100);
 			mMinePageText.setTextColor(getResources().getColor(R.color.green));
 			mViewPager.setCurrentItem(2);
 			break;
@@ -137,15 +142,15 @@ public class MainUserInterfaceActivity extends FragmentActivity
 		switch(index)
 		{
 		case 0:
-			tabNeighborTransition.reverseTransition(1000);
+			tabNeighborTransition.reverseTransition(100);
 			mNeighborPageText.setTextColor(getResources().getColor(R.color.black));
 			break;
 		case 1:
-			tabFindTransition.reverseTransition(1000);
+			tabFindTransition.reverseTransition(100);
 			mFindPageText.setTextColor(getResources().getColor(R.color.black));
 			break;
 		case 2:
-			tabMineTransition.reverseTransition(1000);
+			tabMineTransition.reverseTransition(100);
 			mMinePageText.setTextColor(getResources().getColor(R.color.black));
 			break;
 		default:

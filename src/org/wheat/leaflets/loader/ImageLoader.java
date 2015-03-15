@@ -214,7 +214,7 @@ public class ImageLoader
 			if(result==null){
 				// ¥”Õ¯¬ÁªÒ»°
 				try {
-					result=HttpLoaderMethods.downLoadBitmap(parameters.getUrl(),parameters.getMinSideLength(),parameters.getMaxNumOfPixels());
+					result=HttpLoaderMethods.downLoadBitmap(parameters.getUrl(),parameters.getMinSideLength(),parameters.getMaxNumOfPixels(),parameters.getPhotoType());
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}

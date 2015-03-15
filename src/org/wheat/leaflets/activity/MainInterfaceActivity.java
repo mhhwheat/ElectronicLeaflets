@@ -1,8 +1,8 @@
 /** 
  * description：
  * @author wheat
- * date: 2015-3-5  
- * time: 下午1:09:59
+ * date: 2015-3-9  
+ * time: 下午8:06:32
  */ 
 package org.wheat.leaflets.activity;
 
@@ -25,39 +25,49 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /** 
  * description:
  * @author wheat
- * date: 2015-3-5  
- * time: 下午1:09:59
+ * date: 2015-3-9  
+ * time: 下午8:06:32
  */
-public class FragmentNeighbor extends Fragment implements OnScrollListener
+public class MainInterfaceActivity extends FragmentActivity implements OnScrollListener
 {
+	
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
 	private PullToRefreshListView mPullToRefreshListView;
 	private List<Leaflets> mListData;//保存listview数据项的数组
 	private ImageLoader mImageLoader;//加载图片的对象
 	private LayoutInflater mInflater;
-	private NeighborRefreshListAdapter adapter;
+	private MainInterfaceListAdapter adapter;
 	
 	private boolean isLoadingMore=false;//防止重复开启异步加载线程
 	private View mFooterView;
@@ -66,44 +76,63 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
 	
 	private DisplayMetrics metric;
-
+	
+	private PopupWindow popupMenu;
+	
+	private ImageView ivMinePageButton;//跳转到我的页面的按钮
+	
+	private Button btSortingType;//筛选按钮
+	
+	private SlidingMenu menu;//侧滑菜单
+	
+	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		//获取设备信息
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);  
+		setContentView(R.layout.activity_main_interface);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.activity_main_interface_title);
+		
+		
 		metric = new DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		
 		mListData=new ArrayList<Leaflets>();
-		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
-		adapter=new NeighborRefreshListAdapter();
+		mImageLoader=ImageLoader.getInstance(getApplicationContext());
+		adapter=new MainInterfaceListAdapter();
 		
 		new UpdateDataTask("wheat","published").execute();
 		
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		mInflater=inflater;
+		mInflater=(LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
 		taskPool=new HashMap<String, ImageView>();
-		
-		View view=inflater.inflate(R.layout.fragment_neighbor, container,false);
-		mPullToRefreshListView=(PullToRefreshListView)view.findViewById(R.id.neighbor_refresh_list_view);
-		
+
+		mPullToRefreshListView=(PullToRefreshListView)findViewById(R.id.main_interface_refresh_list_view);
 		mActualListView=mPullToRefreshListView.getRefreshableView();
-		mFooterView=inflater.inflate(R.layout.refresh_list_footer, null);
+		
+		mFooterView=mInflater.inflate(R.layout.refresh_list_footer, null);
 		pbFooterLoading=(ProgressBar)mFooterView.findViewById(R.id.refresh_list_footer_progressbar);
 		tvFooterText=(TextView)mFooterView.findViewById(R.id.refresh_list_footer_text);
-		
+
 		mPullToRefreshListView.setAdapter(adapter);
 		mActualListView.addFooterView(mFooterView);
+		
+		initPopupMenu();
+		btSortingType=(Button)findViewById(R.id.btMain_interface_title_sorting_type);
+		ivMinePageButton=(ImageView)findViewById(R.id.ivMain_interface_title_me);
+		
+		btSortingType.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				popupMenu.showAsDropDown(v,-40,40);
+				popupMenu.showAtLocation(v, Gravity.BOTTOM, 0, 0);
+			}
+		});
+		
+		initialSlidingMenu();
 		initialListViewListener();
-		
-		
-		return view;
 	}
 	
 	@Override
@@ -132,8 +161,7 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 		
 	}
 	
-	
-	private class NeighborRefreshListAdapter extends BaseAdapter
+	private class MainInterfaceListAdapter extends BaseAdapter
 	{
 
 		@Override
@@ -161,23 +189,29 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 			if(convertView==null)
 			{
 				holder=new ViewHolder();
-				convertView=mInflater.inflate(R.layout.fragment_neighbor_list_item, null);
-				holder.ivSellerAvatar=(ImageView)convertView.findViewById(R.id.neighbor_item_seller_avatar);
-				holder.tvSellerName=(TextView)convertView.findViewById(R.id.neighbor_item_seller_name);
-				holder.tvPublishTime=(TextView)convertView.findViewById(R.id.neighbor_item_publish_time);
-				holder.tvLeafletType=(TextView)convertView.findViewById(R.id.neighbor_item_leaflet_type);
-				holder.ivLeafletBrief=(ImageView)convertView.findViewById(R.id.neighbor_item_leaflet_brief);
-				holder.tvPraiseTimes=(TextView)convertView.findViewById(R.id.neighbor_item_praise_times);
-				holder.tvCommentTimes=(TextView)convertView.findViewById(R.id.neighbor_item_comment_times);
-				holder.praiseView=convertView.findViewById(R.id.neighbor_item_praise_area);
-				holder.commentView=convertView.findViewById(R.id.neighbor_item_comment_area);
+				convertView=mInflater.inflate(R.layout.activity_main_interface_list_item, null);
+				holder.ivSellerAvatar=(ImageView)convertView.findViewById(R.id.main_interface_item_seller_avatar);
+				holder.tvSellerName=(TextView)convertView.findViewById(R.id.main_interface_item_seller_name);
+				holder.tvPublishTime=(TextView)convertView.findViewById(R.id.main_interface_item_publish_time);
+				holder.tvLeafletType=(TextView)convertView.findViewById(R.id.main_interface_item_leaflet_type);
+				holder.ivLeafletBrief=(ImageView)convertView.findViewById(R.id.main_interface_item_leaflet_brief);
+				holder.tvPraiseTimes=(TextView)convertView.findViewById(R.id.main_interface_item_praise_times);
+				holder.tvCommentTimes=(TextView)convertView.findViewById(R.id.main_interface_item_comment_times);
+				holder.praiseView=convertView.findViewById(R.id.main_interface_item_praise_area);
+				holder.commentView=convertView.findViewById(R.id.main_interface_item_comment_area);
 				
 				convertView.setTag(holder);
 				
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
-			addTaskToPool(new PhotoParameters(listItem.getLeafletFields().getSellerLogoPath(), 50, 50*50,"secondary"), holder.ivSellerAvatar);
+			
+			if(mPhotoWidth<=0)
+			{
+				holder.ivLeafletBrief.getViewTreeObserver().addOnGlobalLayoutListener(new GlobalLayoutLinstener(holder.ivLeafletBrief));
+			}
+			
+			addTaskToPool(new PhotoParameters(listItem.getLeafletFields().getSellerLogoPath(), 50, 50*50,"seller_logo"), holder.ivSellerAvatar);
 			holder.tvSellerName.setText(listItem.getLeafletFields().getSellerName());
 			holder.tvPublishTime.setText(getDifferenceFromDate(listItem.getLeafletFields().getPublishTime()));
 			holder.tvLeafletType.setText(listItem.getLeafletFields().getLeafletType());
@@ -206,13 +240,27 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 		
 	}
 	
+	private void initialSlidingMenu()
+	{
+		menu=new SlidingMenu(this);
+		menu.setShadowWidth(0);
+		menu.setBehindOffset(200);
+		menu.setFadeDegree(0.35f);
+		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+		menu.setMenu(R.layout.main_interface_sliding_menu);
+		getSupportFragmentManager().beginTransaction()
+		.replace(R.id.menu_frame, new FragmentSlidingMenu()).commit();
+	}
+	
+	
 	private void initialListViewListener()
 	{
 		mPullToRefreshListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
+				String label = DateUtils.formatDateTime(getApplicationContext(), System.currentTimeMillis(),
 						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
 				
 				// Update the LastUpdatedLabel
@@ -239,6 +287,26 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 		
 		mPullToRefreshListView.setOnScrollListener(this);
 	}
+	
+	
+	
+	private void initPopupMenu()
+	{
+		View menuView=mInflater.inflate(R.layout.main_interface_popup_menu, null,false);
+		popupMenu=new PopupWindow(menuView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
+		
+		// 设置允许在外点击消失
+		popupMenu.setOutsideTouchable(true);
+		// 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
+		popupMenu.setFocusable(true);
+		
+		//如果需要PopupWindow响应返回键，那么必须给PopupWindow设置一个背景才行
+		ColorDrawable dw = new ColorDrawable(0X00000000);
+		popupMenu.setBackgroundDrawable(dw);
+		
+		
+	}
+	
 	
 	/**
 	 * 
@@ -341,9 +409,8 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 			super.onPostExecute(result);
 		}
 		
-		
-		
 	}
+	
 	
 	/**
 	 * 
@@ -360,6 +427,8 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 	}
 	
 	
+	
+	@SuppressLint("SimpleDateFormat")
 	private String getDifferenceFromDate(Date date)
 	{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -391,6 +460,7 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 	
 	
 	
+
 	private int mPhotoWidth=0;
 	private int mMinSideLength=0;
 	private int mMaxNumOfPixles=0;
@@ -482,7 +552,5 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 			taskPool.clear();
 		}
 	}
-
-	
 	
 }
