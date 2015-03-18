@@ -96,4 +96,19 @@ public class UTCtoLocal
 		}
 		return gpsUTCDate;
 	}
+	
+	public static String localDate2UTC(Date date)
+	{
+		String utcTimePatten="yyyy-MM-dd'T'HH:mm:ss'Z'";
+		SimpleDateFormat utcFormater = new SimpleDateFormat(utcTimePatten);
+		return utcFormater.format(date);
+	}
+	
+	public static String localDate2UTC()
+	{
+		String utcTimePatten="yyyy-MM-dd'T'HH:mm:ss'Z'";
+		SimpleDateFormat utcFormater = new SimpleDateFormat(utcTimePatten);
+		return utcFormater.format(new Date());
+	}
+	
 }

@@ -8,6 +8,7 @@ package org.wheat.leaflets.loader;
 
 import org.wheat.leaflets.entity.ConstantValue;
 import org.wheat.leaflets.entity.Leaflets;
+import org.wheat.leaflets.entity.json.CommentGetJson;
 import org.wheat.leaflets.entity.json.LeafletsJson;
 import org.wheat.leaflets.httptools.BitmapTools;
 import org.wheat.leaflets.httptools.HttpConnectTools;
@@ -84,5 +85,15 @@ public class HttpLoaderMethods
 			return null;
 		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), LeafletsJson.class);
 	}
+	
+	public static CommentGetJson getCommentContent(int leafletId) throws Throwable
+	{
+		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"flush_comment?leaflet_id="+leafletId, null);
+		if(json==null)
+			return null;
+		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), CommentGetJson.class);
+	}
+	
+	
 	
 }
