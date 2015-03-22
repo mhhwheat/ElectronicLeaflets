@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@color/black">
     <ListView
         android:id="@+id/comment_content_list_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_gravity="bottom"
         android:background="@color/listview_background_color"
         android:cacheColorHint="@android:color/background_light"
         android:divider="@null"
@@ -15,6 +15,6 @@
         android:fastScrollEnabled="false"
 		android:scrollbars="none"
         android:scrollingCache="true"
-        android:stackFromBottom="true"
+        android:stackFromBottom="false"
         android:transcriptMode="normal" />
 </LinearLayout>

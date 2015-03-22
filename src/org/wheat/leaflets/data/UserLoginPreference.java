@@ -26,6 +26,7 @@ public class UserLoginPreference
     private static final String USER_NAME="userName";
     private static final String PASSWORD = "password";  //√‹¬Î  
     private static final String IS_SAVE_PWD = "isSavePwd"; // «∑Ò±£¡Ù√‹¬Î 
+    private static final String USER_AVATAR="userAvatar";
     
     public static synchronized UserLoginPreference getInstance(Context context){  
         if(preference == null)  
@@ -46,9 +47,46 @@ public class UserLoginPreference
     	editor.commit();
     }
     
+    
     public String getUserName()
     {
     	String userName=sharedPreference.getString(USER_NAME, "");
     	return userName;
+    }
+    
+    public void setPassword(String password)
+    {
+    	Editor editor=sharedPreference.edit();
+    	editor.putString(PASSWORD, password);
+    	editor.commit();
+    }
+    
+    public String getPassword()
+    {
+    	return sharedPreference.getString(PASSWORD, "");
+    }
+    
+    public void setIsSavePassword(boolean isSavePassword)
+    {
+    	Editor editor=sharedPreference.edit();
+    	editor.putBoolean(IS_SAVE_PWD, isSavePassword);
+    	editor.commit();
+    }
+    
+    public boolean getIsSavePassword()
+    {
+    	return sharedPreference.getBoolean(IS_SAVE_PWD, false);
+    }
+    
+    public void setUserAvatar(String userAvatar)
+    {
+    	Editor editor = sharedPreference.edit(); 
+    	editor.putString(USER_AVATAR, userAvatar);
+    	editor.commit();
+    }
+    
+    public String getUserAvatar()
+    {
+    	return sharedPreference.getString(USER_AVATAR, "");
     }
 }

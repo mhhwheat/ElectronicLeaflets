@@ -101,6 +101,7 @@ public class UTCtoLocal
 	{
 		String utcTimePatten="yyyy-MM-dd'T'HH:mm:ss'Z'";
 		SimpleDateFormat utcFormater = new SimpleDateFormat(utcTimePatten);
+		utcFormater.setTimeZone(TimeZone.getTimeZone("UTC"));
 		return utcFormater.format(date);
 	}
 	
@@ -108,6 +109,7 @@ public class UTCtoLocal
 	{
 		String utcTimePatten="yyyy-MM-dd'T'HH:mm:ss'Z'";
 		SimpleDateFormat utcFormater = new SimpleDateFormat(utcTimePatten);
+		utcFormater.setTimeZone(TimeZone.getTimeZone("UTC"));
 		return utcFormater.format(new Date());
 	}
 	

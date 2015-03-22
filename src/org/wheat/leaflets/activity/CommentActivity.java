@@ -6,23 +6,29 @@
  */ 
 package org.wheat.leaflets.activity;
 
+import java.io.UnsupportedEncodingException;
+
 import org.wheat.electronicleaflets.R;
 import org.wheat.leaflets.basic.UTCtoLocal;
 import org.wheat.leaflets.entity.CommentPost;
+import org.wheat.leaflets.entity.ConstantValue;
+import org.wheat.leaflets.entity.json.CommentPostJson;
 import org.wheat.leaflets.loader.HttpUploadMethods;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /** 
  * description:用户编辑评论页面
@@ -43,6 +49,9 @@ public class CommentActivity extends Activity
 	private String userName;
 	private int leafletId;
 	
+	private CommentPost comment=null;
+	private View commentViewSoft;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +61,7 @@ public class CommentActivity extends Activity
 		
 		getInfoFromLastActivity();
 		
+		commentViewSoft=findViewById(R.id.comment_view_soft);
 		etCommentContent=(EditText)findViewById(R.id.comment_edit_content);
 		tvValidNumber=(TextView)findViewById(R.id.comment_valid_number);
 		
@@ -112,14 +122,26 @@ public class CommentActivity extends Activity
 			public void onClick(View v) {
 				if(!etCommentContent.getText().toString().equals(""))
 				{
-					CommentPost comment=new CommentPost();
+					comment=new CommentPost();
 					comment.setCommentContent(etCommentContent.getText().toString());
 					comment.setCommentTime(UTCtoLocal.localDate2UTC());
 					comment.setLeafletId(leafletId);
 					comment.setUserName(userName);
 					
-					new PostCommentTask(comment).execute();
+					CommentPostJson json=new CommentPostJson();
+					json.setData(comment);
+					
+					new PostCommentTask(json).execute();
 				}
+			}
+		});
+		
+		commentViewSoft.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				InputMethodManager inputMethodManager=(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		        inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 			}
 		});
 	}
@@ -135,35 +157,46 @@ public class CommentActivity extends Activity
 	
 	private class PostCommentTask extends AsyncTask<Void, Void, Integer>
 	{
-		private CommentPost comment;
+		private CommentPostJson comment;
 		
-		public PostCommentTask(CommentPost comment)
+		public PostCommentTask(CommentPostJson comment)
 		{
 			this.comment=comment;
 		}
 
 		@Override
 		protected Integer doInBackground(Void... params) {
-			int returnCode=-1;
+			CommentPostJson json=null;
 			try {
-				returnCode=HttpUploadMethods.postCommentPost(comment);
+				json=HttpUploadMethods.postCommentPost(comment);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			return Integer.valueOf(returnCode);
+			if(json==null)
+				return 0;
+			else
+				return json.getCode();
 		}
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			if(result==1000)
+			if(result==ConstantValue.operateSuccess)
 			{
 				Intent intent=new Intent();
 				Bundle bundle=new Bundle();
-				bundle.putString("comment_content", etCommentContent.getText().toString());
+				try {
+					bundle.putString("comment_content", new String(etCommentContent.getText().toString().getBytes(),"UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+				bundle.putString("comment_time", comment.getData().getCommentTime());
 				intent.putExtras(bundle);
 				setResult(RESULT_OK, intent);
 				CommentActivity.this.finish();
+			}
+			else if(result==ConstantValue.commentRepeat)
+			{
+				Toast.makeText(CommentActivity.this, "重复评论", Toast.LENGTH_LONG).show();
 			}
 			super.onPostExecute(result);
 		}

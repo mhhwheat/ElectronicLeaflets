@@ -7,7 +7,6 @@
 package org.wheat.leaflets.loader;
 
 import org.wheat.leaflets.entity.ConstantValue;
-import org.wheat.leaflets.entity.Leaflets;
 import org.wheat.leaflets.entity.json.CommentGetJson;
 import org.wheat.leaflets.entity.json.LeafletsJson;
 import org.wheat.leaflets.httptools.BitmapTools;
@@ -64,6 +63,7 @@ public class HttpLoaderMethods
 	public static LeafletsJson flushLeafletData(String username,String orderRule) throws Throwable
 	{
 		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"flush_leaflet_data?username="+username+"&order_rule="+orderRule, null);
+//		Log.d("HttpLoaderMethods", json);
 		if(json==null)
 			return null;
 		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), LeafletsJson.class);
@@ -86,14 +86,23 @@ public class HttpLoaderMethods
 		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), LeafletsJson.class);
 	}
 	
-	public static CommentGetJson getCommentContent(int leafletId) throws Throwable
+	public static CommentGetJson getCommentContent(String userName,int leafletId) throws Throwable
 	{
-		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"flush_comment?leaflet_id="+leafletId, null);
+//		Log.d("HttpLoaderMethods", "flush comment");
+		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"flush_comment?username="+userName+"&leaflet_id="+leafletId, null);
+//		Log.d("HttpLoaderMethods", json);
 		if(json==null)
 			return null;
 		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), CommentGetJson.class);
 	}
 	
+	public static CommentGetJson getCommentContent(String userName,int offsetStart,int offsetEnd) throws Throwable
+	{
+		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"?username="+userName+"&offset_begin="+offsetStart+"&offsetEnd="+offsetEnd, null);
+		if(json==null)
+			return null;
+		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), CommentGetJson.class);
+	}
 	
 	
 }

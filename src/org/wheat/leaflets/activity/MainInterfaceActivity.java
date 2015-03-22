@@ -9,11 +9,17 @@ package org.wheat.leaflets.activity;
 
 import org.wheat.electronicleaflets.R;
 import org.wheat.leaflets.activity.FragmentSlidingMenu.OnSlidingMenuItemClickListener;
+import org.wheat.leaflets.entity.MyLocation;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.LocationManagerProxy;
+import com.amap.api.location.LocationProviderProxy;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +32,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 /** 
  * description:
@@ -33,7 +40,7 @@ import android.widget.PopupWindow;
  * date: 2015-3-9  
  * time: 下午8:06:32
  */
-public class MainInterfaceActivity extends FragmentActivity implements OnSlidingMenuItemClickListener
+public class MainInterfaceActivity extends FragmentActivity implements OnSlidingMenuItemClickListener ,AMapLocationListener
 {
 	private LayoutInflater mInflater;
 	
@@ -41,7 +48,8 @@ public class MainInterfaceActivity extends FragmentActivity implements OnSliding
 	
 	private ImageView ivMinePageButton;//跳转到我的页面的按钮
 	
-	private Button btSortingType;//筛选按钮
+	
+	private Button btSortingType;//筛选按钮0
 	
 	private SlidingMenu menu;//侧滑菜单
 	
@@ -49,6 +57,12 @@ public class MainInterfaceActivity extends FragmentActivity implements OnSliding
 	private Fragment mNeighborFragment;
 	private Fragment mFollowFragment;
 	
+	
+	/**
+	 * 高德地图定位信息
+	 */
+	private LocationManagerProxy mLocationManagerProxy;
+	private  MyLocation myLocation = new MyLocation();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +92,11 @@ public class MainInterfaceActivity extends FragmentActivity implements OnSliding
 		mFollowFragment=new FragmentFollow();
 		switchFragment(null, mNeighborFragment, R.id.replacing_fragment);
 		mCurrentFragment=mNeighborFragment;
+		
+		// 开启界面的时候就定位
+		mLocationManagerProxy = LocationManagerProxy.getInstance(this);
+		mLocationManagerProxy.setGpsEnable(false);
+		mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, -1, 150, this);
 	}
 	
 	
@@ -155,17 +174,68 @@ public class MainInterfaceActivity extends FragmentActivity implements OnSliding
 	public void onItemClick(int item) {
 		switch(item)
 		{
-		case 1:
+		case 0:
 			switchFragment(mCurrentFragment, mNeighborFragment, R.id.replacing_fragment);
 			mCurrentFragment=mNeighborFragment;
 			menu.toggle();
 			break;
-		case 0:
+		case 1:
 			switchFragment(mCurrentFragment, mFollowFragment, R.id.replacing_fragment);
 			mCurrentFragment=mFollowFragment;
 			menu.toggle();
 			break;
 		}
+	}
+
+
+	
+	//高德地图api接口
+
+	@Override
+	public void onLocationChanged(Location location) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void onLocationChanged(AMapLocation amapLocation) {
+		if (amapLocation!=null&&amapLocation.getAMapException().getErrorCode() == 0) {
+			// 定位成功回调信息，设置相关消息
+			
+			this.myLocation.setLat(amapLocation.getLatitude());
+			this.myLocation.setLng(amapLocation.getLongitude());
+			this.myLocation.setLocationMessage(amapLocation.getAddress());
+			Toast.makeText(this, amapLocation.getAddress(),Toast.LENGTH_LONG).show();
+		}else{
+			Toast.makeText(this, "定位失败，请检查你的GPS和网络", Toast.LENGTH_LONG);
+		}
+		
 	}
 	
 }

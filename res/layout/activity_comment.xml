@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/comment_view_soft"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white" >
-
     <EditText
         android:id="@+id/comment_edit_content"
         android:layout_width="fill_parent"
@@ -11,7 +11,8 @@
         android:gravity="left|top"
         android:hint="说点什么"
         android:inputType="textMultiLine" 
-        android:maxLength="200"/>
+        android:maxLength="200"
+        android:background="#00000000"/>
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -32,5 +33,6 @@
             android:layout_toLeftOf="@id/comment_valid_number_sign"
             android:text="200" />
     </RelativeLayout>
+
 
 </RelativeLayout>

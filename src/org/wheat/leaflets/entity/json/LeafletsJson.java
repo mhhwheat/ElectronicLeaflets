@@ -8,7 +8,8 @@ package org.wheat.leaflets.entity.json;
 
 import java.util.ArrayList;
 
-import org.wheat.leaflets.entity.Leaflets;
+import org.wheat.leaflets.entity.LeafletsFields;
+import org.wheat.leaflets.entity.ReturnData;
 
 /** 
  * description:
@@ -16,7 +17,7 @@ import org.wheat.leaflets.entity.Leaflets;
  * date: 2015-3-7  
  * time: обнГ4:30:07
  */
-public class LeafletsJson extends JsonBaseImpl<ArrayList<Leaflets>>
+public class LeafletsJson extends JsonBaseImpl<ArrayList<ReturnData<LeafletsFields>>>
 {
 
 }

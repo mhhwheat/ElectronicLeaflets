@@ -8,7 +8,8 @@ package org.wheat.leaflets.entity.json;
 
 import java.util.ArrayList;
 
-import org.wheat.leaflets.entity.CommentGet;
+import org.wheat.leaflets.entity.CommentGetFields;
+import org.wheat.leaflets.entity.ReturnData;
 
 /** 
  * description:
@@ -16,7 +17,7 @@ import org.wheat.leaflets.entity.CommentGet;
  * date: 2015-3-17  
  * time: обнГ3:20:00
  */
-public class CommentGetJson extends JsonBaseImpl<ArrayList<CommentGet>>
+public class CommentGetJson extends JsonBaseImpl<ArrayList<ReturnData<CommentGetFields>>>
 {
 
 }

@@ -209,6 +209,7 @@ public class HttpConnectTools
         
         return result;
 	}
+	
 	/**
 	 * @description using  json to deliver the data
 	 * @author hogachen
@@ -234,7 +235,9 @@ public class HttpConnectTools
         
         String objectJson=JsonTools.toJson(object);
         
-        httpPost.setEntity(new StringEntity(objectJson));
+        StringEntity entity=new StringEntity(objectJson,"UTF-8");
+        entity.setContentType("application/json");
+        httpPost.setEntity(entity);
         
     
         //开始请求
@@ -250,6 +253,38 @@ public class HttpConnectTools
         
         return null;
 	}
+	
+	public static String postJsonReturnJsonString(String url,HashMap<String,String> headers,Object object) throws IOException
+	{
+		DefaultHttpClient httpClient=new DefaultHttpClient(createHttpParams());
+		httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(0,false));
+		
+		HttpPost httpPost=new HttpPost(url);
+		
+		//http报头
+        if (headers == null) {
+            headers = new HashMap<String, String>();
+//            headers.put("content-type", "text/xml;charset=UTF-8");
+        }
+        addHeaders(httpPost, headers);//加入http报头
+        
+        String objectJson=JsonTools.toJson(object);
+        
+        StringEntity entity=new StringEntity(objectJson,"UTF-8");
+        entity.setContentType("application/json");
+        httpPost.setEntity(entity);
+        
+        
+    
+        //开始请求
+        System.out.println("in post withoutdata1");
+        HttpResponse rsp=httpClient.execute(httpPost);
+        System.out.println("in post withoutdata2");
+        return getStringContentFromHttpResponse(rsp);
+		
+		
+	}
+	
 	/**
 	 * 
 	* @Description: TODO 使用post方法传送数据对象到服务端，禁止获取数据超时重传
@@ -278,7 +313,7 @@ public class HttpConnectTools
 		}
 		// 加入http报头
 		addHeaders(httpPost, headers);
-
+		
 		
 		
 		String objectJson = JsonTools.toJson(object);

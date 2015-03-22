@@ -24,6 +24,7 @@ import android.widget.TextView;
 public class FragmentSlidingMenu extends Fragment
 {
 	private OnSlidingMenuItemClickListener listener;
+	private TextView tvNeighbor;
 	private TextView tvFollow;
 	private TextView tvSetting;
 
@@ -36,15 +37,24 @@ public class FragmentSlidingMenu extends Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view=inflater.inflate(R.layout.fragment_sliding_menu,null);
+		tvNeighbor=(TextView)view.findViewById(R.id.sliding_menu_neighbor);
 		tvFollow=(TextView)view.findViewById(R.id.sliding_menu_my_follow);
 		tvSetting=(TextView)view.findViewById(R.id.sliding_menu_setting);
+		tvNeighbor.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(listener!=null)
+					listener.onItemClick(0);
+			}
+		});
 		tvFollow.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				//点击我的关注项
 				if(listener!=null)
-					listener.onItemClick(0);
+					listener.onItemClick(1);
 			}
 		});
 		tvSetting.setOnClickListener(new View.OnClickListener() {
@@ -53,9 +63,10 @@ public class FragmentSlidingMenu extends Fragment
 			public void onClick(View v) {
 				//点击设置菜单项
 				if(listener!=null)
-					listener.onItemClick(1);
+					listener.onItemClick(2);
 			}
 		});
+		
 		
 		return view;
 	}

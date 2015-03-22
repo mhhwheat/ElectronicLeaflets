@@ -18,7 +18,7 @@ import com.google.gson.annotations.SerializedName;
  * date: 2015-3-6  
  * time: ÏÂÎç7:26:14
  */
-public class LeafletsFields 
+public class LeafletsFields
 {
 	@SerializedName("published_time")
 	private String publishTime;
@@ -79,6 +79,11 @@ public class LeafletsFields
 	 */
 	@SerializedName("distance")
 	private double distance;
+	
+	@SerializedName("is_praise")
+	private int isPraise;
+	
+
 	
 
 	public Date getPublishTime() {
@@ -183,6 +188,14 @@ public class LeafletsFields
 
 	public void setDistance(double distance) {
 		this.distance = distance;
+	}
+	
+	public int isPraise() {
+		return isPraise;
+	}
+
+	public void setPraise(int isPraise) {
+		this.isPraise = isPraise;
 	}
 	
 	

@@ -18,11 +18,12 @@ import com.google.gson.annotations.SerializedName;
  * date: 2015-3-17  
  * time: обнГ3:08:44
  */
-public class CommentGet
+public class CommentGetFields
 {
 	@SerializedName("leaflet_id")
 	private int leafletID;
 	
+	@SerializedName("user_portrait")
 	private String userAvatar;
 	
 	@SerializedName("comment_user")

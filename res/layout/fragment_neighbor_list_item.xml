@@ -93,7 +93,7 @@
                 android:id="@+id/neighbor_item_praise_button"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/praisefull" />
+                android:src="@drawable/praise" />
 
             <TextView
                 android:id="@+id/neighbor_item_praise_times"

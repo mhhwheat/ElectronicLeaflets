@@ -15,8 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.wheat.electronicleaflets.R;
-import org.wheat.leaflets.entity.Leaflets;
+import org.wheat.leaflets.entity.LeafletsFields;
 import org.wheat.leaflets.entity.PhotoParameters;
+import org.wheat.leaflets.entity.ReturnData;
 import org.wheat.leaflets.loader.ImageLoader;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -51,7 +52,7 @@ public class FragmentFind extends Fragment implements OnScrollListener
 {
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
 	private PullToRefreshListView mPullToRefreshListView;
-	private List<Leaflets> mListData;//保存listview数据项的数组
+	private List<ReturnData<LeafletsFields>> mListData;//保存listview数据项的数组
 	private ImageLoader mImageLoader;//加载图片的对象
 	private LayoutInflater mInflater;
 	private FindRefreshListAdapter adapter;
@@ -71,7 +72,7 @@ public class FragmentFind extends Fragment implements OnScrollListener
 		metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
 
-		mListData=new ArrayList<Leaflets>();
+		mListData=new ArrayList<ReturnData<LeafletsFields>>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		
 		adapter=new FindRefreshListAdapter();
@@ -157,7 +158,7 @@ public class FragmentFind extends Fragment implements OnScrollListener
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			final Leaflets listItem=mListData.get(position);
+			final ReturnData<LeafletsFields> listItem=mListData.get(position);
 			ViewHolder holder=null;
 			if(convertView==null)
 			{
@@ -178,13 +179,13 @@ public class FragmentFind extends Fragment implements OnScrollListener
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
-			addTaskToPool(new PhotoParameters(listItem.getLeafletFields().getSellerLogoPath(), 50, 50*50,"secondary"), holder.ivSellerAvatar);
-			holder.tvSellerName.setText(listItem.getLeafletFields().getSellerName());
-			holder.tvPublishTime.setText(getDifferenceFromDate(listItem.getLeafletFields().getPublishTime()));
-			holder.tvLeafletType.setText(listItem.getLeafletFields().getLeafletType());
-			addTaskToPool(new PhotoParameters(listItem.getLeafletFields().getBriefLeafletPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true,mPhotoWidth,"secondary"), holder.ivLeafletBrief);
-			holder.tvPraiseTimes.setText(String.valueOf(listItem.getLeafletFields().getPraiseTimes()));
-			holder.tvCommentTimes.setText(String.valueOf(listItem.getLeafletFields().getCommentTimes()));
+			addTaskToPool(new PhotoParameters(listItem.getDataFields().getSellerLogoPath(), 50, 50*50,"secondary"), holder.ivSellerAvatar);
+			holder.tvSellerName.setText(listItem.getDataFields().getSellerName());
+			holder.tvPublishTime.setText(getDifferenceFromDate(listItem.getDataFields().getPublishTime()));
+			holder.tvLeafletType.setText(listItem.getDataFields().getLeafletType());
+			addTaskToPool(new PhotoParameters(listItem.getDataFields().getBriefLeafletPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true,mPhotoWidth,"secondary"), holder.ivLeafletBrief);
+			holder.tvPraiseTimes.setText(String.valueOf(listItem.getDataFields().getPraiseTimes()));
+			holder.tvCommentTimes.setText(String.valueOf(listItem.getDataFields().getCommentTimes()));
 			holder.praiseView.setTag(listItem);
 			holder.commentView.setTag(listItem);
 			

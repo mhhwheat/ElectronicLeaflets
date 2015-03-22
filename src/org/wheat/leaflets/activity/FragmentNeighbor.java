@@ -11,14 +11,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.wheat.electronicleaflets.R;
-import org.wheat.leaflets.entity.Leaflets;
+import org.wheat.leaflets.data.UserLoginPreference;
+import org.wheat.leaflets.entity.LeafletsFields;
 import org.wheat.leaflets.entity.PhotoParameters;
+import org.wheat.leaflets.entity.PraisePost;
+import org.wheat.leaflets.entity.ReturnData;
 import org.wheat.leaflets.entity.json.LeafletsJson;
+import org.wheat.leaflets.entity.json.PraisePostJson;
 import org.wheat.leaflets.loader.HttpLoaderMethods;
+import org.wheat.leaflets.loader.HttpUploadMethods;
 import org.wheat.leaflets.loader.ImageLoader;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -26,6 +32,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleLis
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,6 +42,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AbsListView;
@@ -53,8 +62,10 @@ import android.widget.TextView;
 public class FragmentNeighbor extends Fragment implements OnScrollListener
 {
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
+	private String userName="wheat";
+	
 	private PullToRefreshListView mPullToRefreshListView;
-	private List<Leaflets> mListData;//保存listview数据项的数组
+	private List<ReturnData<LeafletsFields>> mListData;//保存listview数据项的数组
 	private ImageLoader mImageLoader;//加载图片的对象
 	private LayoutInflater mInflater;
 	private NeighborRefreshListAdapter adapter;
@@ -71,11 +82,16 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		userName=UserLoginPreference.getInstance(getActivity().getApplicationContext()).getUserName();
+		if(userName.equals("")||userName==null)
+		{
+			userName="wheat";
+		}
 		//获取设备信息
 		metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
 		
-		mListData=new ArrayList<Leaflets>();
+		mListData=new ArrayList<ReturnData<LeafletsFields>>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new NeighborRefreshListAdapter();
 		
@@ -106,6 +122,29 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 		return view;
 	}
 	
+	
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(resultCode==Activity.RESULT_OK&&requestCode==1)
+		{
+			int leafletId=data.getIntExtra("leaflet_id", -1);
+			int newCommentCount=data.getIntExtra("new_comment_count", 0);
+			
+			ReturnData<LeafletsFields> leaflet=findLeafletsByID(mListData, leafletId);
+			if(leaflet!=null)
+			{
+				if(leaflet.getDataFields().getCommentTimes()<newCommentCount)
+				{
+					leaflet.getDataFields().setCommentTimes(newCommentCount);
+					adapter.notifyDataSetChanged();
+				}
+			}
+			
+		}
+	}
+
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		switch(scrollState)
@@ -156,7 +195,7 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			final Leaflets listItem=mListData.get(position);
+			final ReturnData<LeafletsFields> listItem=mListData.get(position);
 			ViewHolder holder=null;
 			if(convertView==null)
 			{
@@ -168,28 +207,39 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 				holder.tvLeafletType=(TextView)convertView.findViewById(R.id.neighbor_item_leaflet_type);
 				holder.ivLeafletBrief=(ImageView)convertView.findViewById(R.id.neighbor_item_leaflet_brief);
 				holder.tvPraiseTimes=(TextView)convertView.findViewById(R.id.neighbor_item_praise_times);
+				holder.ivPraise=(ImageView)convertView.findViewById(R.id.neighbor_item_praise_button);
 				holder.tvCommentTimes=(TextView)convertView.findViewById(R.id.neighbor_item_comment_times);
 				holder.praiseView=convertView.findViewById(R.id.neighbor_item_praise_area);
 				holder.commentView=convertView.findViewById(R.id.neighbor_item_comment_area);
 				
 				convertView.setTag(holder);
 				
+				holder.commentView.setOnClickListener(new CommentAreaOnClickListener());
+				holder.praiseView.setOnClickListener(new PraiseAreaOnClickListenter());
+				
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
+			
+			holder.commentView.setTag(listItem);
+			holder.praiseView.setTag(listItem);
 			
 			if(mPhotoWidth<=0)
 			{
 				holder.ivLeafletBrief.getViewTreeObserver().addOnGlobalLayoutListener(new GlobalLayoutLinstener(holder.ivLeafletBrief));
 			}
 			
-			addTaskToPool(new PhotoParameters(listItem.getLeafletFields().getSellerLogoPath(), 50, 50*50,"secondary"), holder.ivSellerAvatar);
-			holder.tvSellerName.setText(listItem.getLeafletFields().getSellerName());
-			holder.tvPublishTime.setText(getDifferenceFromDate(listItem.getLeafletFields().getPublishTime()));
-			holder.tvLeafletType.setText(listItem.getLeafletFields().getLeafletType());
-			addTaskToPool(new PhotoParameters(listItem.getLeafletFields().getBriefLeafletPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true,mPhotoWidth,"secondary"), holder.ivLeafletBrief);
-			holder.tvPraiseTimes.setText(String.valueOf(listItem.getLeafletFields().getPraiseTimes()));
-			holder.tvCommentTimes.setText(String.valueOf(listItem.getLeafletFields().getCommentTimes()));
+			addTaskToPool(new PhotoParameters(listItem.getDataFields().getSellerLogoPath(), 50, 50*50,"seller_logo"), holder.ivSellerAvatar);
+			holder.tvSellerName.setText(listItem.getDataFields().getSellerName());
+			holder.tvPublishTime.setText(getDifferenceFromDate(listItem.getDataFields().getPublishTime()));
+			holder.tvLeafletType.setText(listItem.getDataFields().getLeafletType());
+			addTaskToPool(new PhotoParameters(listItem.getDataFields().getBriefLeafletPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true,mPhotoWidth,"secondary"), holder.ivLeafletBrief);
+			holder.tvPraiseTimes.setText(String.valueOf(listItem.getDataFields().getPraiseTimes()));
+			if(listItem.getDataFields().isPraise()==1)
+				holder.ivPraise.setImageResource(R.drawable.praisefull);
+			else
+				holder.ivPraise.setImageResource(R.drawable.praise);
+			holder.tvCommentTimes.setText(String.valueOf(listItem.getDataFields().getCommentTimes()));
 			holder.praiseView.setTag(listItem);
 			holder.commentView.setTag(listItem);
 			
@@ -204,6 +254,7 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 			public TextView tvLeafletType;
 			public ImageView ivLeafletBrief;
 			public TextView  tvPraiseTimes;
+			public ImageView ivPraise;
 			public TextView  tvCommentTimes;
 			public View praiseView;
 			public View commentView;
@@ -238,7 +289,7 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 					isLoadingMore=true;
 					pbFooterLoading.setVisibility(View.VISIBLE);
 					tvFooterText.setText(R.string.list_footer_loading);
-					new LoadMoreTask(mListData.size(),mListData.size()+PAGE_LENGTH,"wheat","published").execute();
+					new LoadMoreTask(mListData.size()+1,mListData.size()+PAGE_LENGTH,"wheat","published").execute();
 				}
 			}
 		});
@@ -269,7 +320,7 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 			LeafletsJson json=null;
 			try
 			{
-				json=HttpLoaderMethods.flushLeafletData("wheat","published");
+				json=HttpLoaderMethods.flushLeafletData(userName,sortingType);
 			}catch(Throwable e)
 			{
 				e.printStackTrace();
@@ -392,6 +443,70 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 		else
 		{
 			return second+new String("秒前");
+		}
+	}
+	
+	private ReturnData<LeafletsFields> findLeafletsByID(List<ReturnData<LeafletsFields>> list,int leafletId)
+	{
+		ReturnData<LeafletsFields> leaflets=null;
+		for(Iterator<ReturnData<LeafletsFields>> i=list.iterator();i.hasNext();)
+		{
+			leaflets=i.next();
+			if(leaflets.getPrimaryKey()==leafletId)
+				break;
+		}
+		return leaflets;
+	}
+	
+	private class CommentAreaOnClickListener implements OnClickListener
+	{
+		private ReturnData<LeafletsFields> listItem;
+		@Override
+		public void onClick(View v) {
+			listItem=(ReturnData<LeafletsFields>)v.getTag();
+			
+			Intent intent=new Intent(getActivity(),CommentContentActivity.class);
+			Bundle bundle=new Bundle();
+			bundle.putString("user_name", userName);
+			bundle.putInt("leaflet_id", listItem.getPrimaryKey());
+			bundle.putInt("comment_count", listItem.getDataFields().getCommentTimes());
+			intent.putExtras(bundle);
+			startActivityForResult(intent, 1);
+		}
+		
+	}
+	
+	private class PraiseAreaOnClickListenter implements OnClickListener
+	{
+		private ReturnData<LeafletsFields> leaflet;
+
+		@Override
+		public void onClick(View v) {
+			leaflet=(ReturnData<LeafletsFields>)v.getTag();
+			if(leaflet.getDataFields().isPraise()==0)
+			{
+				leaflet.getDataFields().setPraise(1);
+				leaflet.getDataFields().setPraiseTimes(leaflet.getDataFields().getPraiseTimes()+1);
+				adapter.notifyDataSetChanged();
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						PraisePost praisePost=new PraisePost();
+						praisePost.setLeafletId(leaflet.getPrimaryKey());
+						praisePost.setUserName(userName);
+						
+						PraisePostJson json=new PraisePostJson();
+						json.setData(praisePost);
+						try{
+							HttpUploadMethods.postPraisePost(json);
+						}catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+					}
+				}).start();
+			}
 		}
 	}
 	

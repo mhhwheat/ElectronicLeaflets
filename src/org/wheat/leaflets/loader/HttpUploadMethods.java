@@ -6,9 +6,11 @@
  */ 
 package org.wheat.leaflets.loader;
 
-import org.wheat.leaflets.entity.CommentPost;
 import org.wheat.leaflets.entity.ConstantValue;
+import org.wheat.leaflets.entity.json.CommentPostJson;
+import org.wheat.leaflets.entity.json.PraisePostJson;
 import org.wheat.leaflets.httptools.HttpConnectTools;
+import org.wheat.leaflets.httptools.JsonTools;
 
 /** 
  * description:
@@ -18,11 +20,17 @@ import org.wheat.leaflets.httptools.HttpConnectTools;
  */
 public class HttpUploadMethods 
 {
-	public static int postCommentPost(CommentPost comment) throws Exception
+	public static CommentPostJson postCommentPost(CommentPostJson comment) throws Exception
 	{
-		return HttpConnectTools.postJsonReturnCode(ConstantValue.HttpRoot+"set_comment", comment, null);
+		String json= HttpConnectTools.postJsonReturnJsonString(ConstantValue.HttpRoot+"set_comment", null, comment);
+		return JsonTools.fromJson(json, CommentPostJson.class);
 	}
 	
-	
-	
+	public static PraisePostJson postPraisePost(PraisePostJson praise) throws Exception
+	{
+		String json=HttpConnectTools.postJsonReturnJsonString(ConstantValue.HttpRoot+"set_praise", null, praise);
+		if(json!=null)
+			return JsonTools.fromJson(json, PraisePostJson.class);
+		return null;
+	}
 }
