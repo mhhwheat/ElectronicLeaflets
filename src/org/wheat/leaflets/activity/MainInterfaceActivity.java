@@ -7,6 +7,7 @@
 package org.wheat.leaflets.activity;
 
 
+
 import org.wheat.electronicleaflets.R;
 import org.wheat.leaflets.activity.FragmentSlidingMenu.OnSlidingMenuItemClickListener;
 import org.wheat.leaflets.entity.MyLocation;
@@ -25,6 +26,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -54,7 +56,7 @@ public class MainInterfaceActivity extends FragmentActivity implements OnSliding
 	private SlidingMenu menu;//侧滑菜单
 	
 	private Fragment mCurrentFragment;
-	private Fragment mNeighborFragment;
+	private Fragment mMainInterfaceFragment;
 	private Fragment mFollowFragment;
 	
 	
@@ -88,10 +90,10 @@ public class MainInterfaceActivity extends FragmentActivity implements OnSliding
 		
 		initialSlidingMenu();
 		
-		mNeighborFragment=new FragmentNeighbor();
+		mMainInterfaceFragment=new FragmentMainInterface();
 		mFollowFragment=new FragmentFollow();
-		switchFragment(null, mNeighborFragment, R.id.replacing_fragment);
-		mCurrentFragment=mNeighborFragment;
+		switchFragment(null, mMainInterfaceFragment, R.id.replacing_fragment);
+		mCurrentFragment=mMainInterfaceFragment;
 		
 		// 开启界面的时候就定位
 		mLocationManagerProxy = LocationManagerProxy.getInstance(this);
@@ -175,8 +177,8 @@ public class MainInterfaceActivity extends FragmentActivity implements OnSliding
 		switch(item)
 		{
 		case 0:
-			switchFragment(mCurrentFragment, mNeighborFragment, R.id.replacing_fragment);
-			mCurrentFragment=mNeighborFragment;
+			switchFragment(mCurrentFragment, mMainInterfaceFragment, R.id.replacing_fragment);
+			mCurrentFragment=mMainInterfaceFragment;
 			menu.toggle();
 			break;
 		case 1:
@@ -233,9 +235,45 @@ public class MainInterfaceActivity extends FragmentActivity implements OnSliding
 			this.myLocation.setLocationMessage(amapLocation.getAddress());
 			Toast.makeText(this, amapLocation.getAddress(),Toast.LENGTH_LONG).show();
 		}else{
-			Toast.makeText(this, "定位失败，请检查你的GPS和网络", Toast.LENGTH_LONG);
+			Toast.makeText(this, "定位失败，请检查你的GPS和网络", Toast.LENGTH_LONG).show();
 		}
 		
 	}
 	
+	//拦截返回键消息
+		public boolean onKeyDown(int keyCode, KeyEvent event) {
+			if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+			}
+			return true;
+		}
+	
+//	/** 
+//	 * 以下的几个方法用来，让fragment能够监听touch事件 
+//	 */  
+//	private ArrayList<ActivityOnTouchListener> onTouchListeners = new ArrayList<ActivityOnTouchListener>();  
+//
+//	@Override  
+//	public boolean dispatchTouchEvent(MotionEvent ev) 
+//	{  
+//		for (ActivityOnTouchListener listener : onTouchListeners) 
+//		{  
+//			listener.onTouch(ev);  
+//		}  
+//		return super.dispatchTouchEvent(ev);  
+//	}  
+//
+//	public void registerActivityOnTouchListener(ActivityOnTouchListener ActivityOnTouchListener) {  
+//		onTouchListeners.add(ActivityOnTouchListener);  
+//	}  
+//
+//	public void unregisterActivityOnTouchListener(ActivityOnTouchListener ActivityOnTouchListener) {  
+//		onTouchListeners.remove(ActivityOnTouchListener);  
+//	}  
+//
+//	public interface ActivityOnTouchListener
+//	{
+//		public boolean onTouch(MotionEvent ev);  
+//	}
+//	
 }

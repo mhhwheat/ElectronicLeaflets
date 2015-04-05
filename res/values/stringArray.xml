@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="my_follow_string_array">
+        <item >全部传单</item>
+        <item >我的关注</item>
+    </string-array>
+    
+    <string-array name="sorting_way_string_array">
+        <item >智能排序</item>
+        <item >离我最近</item>
+        <item >即将开始</item>
+        <item >即将结束</item>
+        <item >新发布</item>
+    </string-array>
+    
+    <string-array name="leaflet_class_string_array">
+        <item >全部分类</item>
+        <item >美食</item>
+        <item >电影</item>
+        <item >购物</item>
+        <item >休闲娱乐</item>
+    </string-array>
+</resources>

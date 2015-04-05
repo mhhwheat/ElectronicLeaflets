@@ -70,7 +70,7 @@ public class ImageLoader
 	}
 	
 	/**
-     * 锁住时不允许加载图片,滑平不加载
+     * 锁住时不允许加载图片,滑屏不加载
      */
 	public void lock()
 	{

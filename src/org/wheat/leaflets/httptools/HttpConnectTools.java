@@ -121,6 +121,7 @@ public class HttpConnectTools
 		return rsp.getStatusLine().getStatusCode();
 		
 	}
+	
 	/**
 	 * @author  hogachen
 	 * @description add the data which going to post  to the url paramters

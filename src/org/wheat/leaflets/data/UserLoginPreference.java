@@ -27,6 +27,7 @@ public class UserLoginPreference
     private static final String PASSWORD = "password";  //密码  
     private static final String IS_SAVE_PWD = "isSavePwd"; //是否保留密码 
     private static final String USER_AVATAR="userAvatar";
+    private static final String IS_FIRST_RUN="isFirstRun";//是否是第一次启动程序
     
     public static synchronized UserLoginPreference getInstance(Context context){  
         if(preference == null)  
@@ -88,5 +89,17 @@ public class UserLoginPreference
     public String getUserAvatar()
     {
     	return sharedPreference.getString(USER_AVATAR, "");
+    }
+    
+    public void firstRun()
+    {
+    	Editor editor=sharedPreference.edit();
+    	editor.putBoolean(IS_FIRST_RUN, false);
+    	editor.commit();
+    }
+    
+    public boolean isFirstRun()
+    {
+    	return sharedPreference.getBoolean(IS_FIRST_RUN, true);
     }
 }

@@ -33,4 +33,10 @@ public class HttpUploadMethods
 			return JsonTools.fromJson(json, PraisePostJson.class);
 		return null;
 	}
+	
+	public static int removePraiseRecord(int leaflet_id,String userName) throws Exception
+	{
+		int returnCode=HttpConnectTools.getReturnCode(ConstantValue.HttpRoot+"remove_praise"+"?leaflet_id="+leaflet_id+"&username="+userName, null, null);
+		return returnCode;
+	}
 }

@@ -240,8 +240,6 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 			else
 				holder.ivPraise.setImageResource(R.drawable.praise);
 			holder.tvCommentTimes.setText(String.valueOf(listItem.getDataFields().getCommentTimes()));
-			holder.praiseView.setTag(listItem);
-			holder.commentView.setTag(listItem);
 			
 			return convertView;
 		}
@@ -426,7 +424,7 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 		long day=between/(24*3600);
 		long hour=between%(24*3600)/3600;
 		long minute=between%3600/60;
-		long second=between%60/60;
+		long second=between%60;
 		
 		if(day>0)
 		{

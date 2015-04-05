@@ -3,7 +3,81 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/listview_background_color">
+    android:background="@color/listview_background_color">  
+    <LinearLayout
+        android:id="@+id/middlelinearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tuan_tab_linear_background"
+            android:paddingBottom="0.5dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0.5dp"
+            android:paddingTop="0dp" >
+
+            <TextView
+                android:id="@+id/btFragment_main_interface_leaflet_class"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/my_tab_background"
+                android:drawableRight="@drawable/ic_arrow_down_black"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:text="全部分类"
+                android:textColor="#666666" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tuan_tab_linear_background"
+            android:paddingBottom="0.5dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0.5dp"
+            android:paddingTop="0dp" >
+
+            <TextView
+                android:id="@+id/btFragment_main_interface_sorting_way"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/my_tab_background"
+                android:drawableRight="@drawable/ic_arrow_down_black"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:text="智能排序"
+                android:textColor="#666666" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tuan_tab_linear_background"
+            android:paddingBottom="0.5dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0.5dp"
+            android:paddingTop="0dp" >
+
+            <TextView
+                android:id="@+id/btFragment_main_interface_my_follow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/my_tab_background"
+                android:drawableRight="@drawable/ic_arrow_down_black"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:text="我的关注"
+                android:textColor="#666666" />
+        </LinearLayout>
+    </LinearLayout>
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/fragment_main_interface_refresh_list_view"
