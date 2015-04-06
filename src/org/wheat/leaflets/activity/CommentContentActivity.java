@@ -325,9 +325,6 @@ public class CommentContentActivity extends Activity implements OnScrollListener
 				onLoadComplete(true);
 			super.onPostExecute(result);
 		}
-		
-		
-		
 	}
 	
 	/**
@@ -345,16 +342,16 @@ public class CommentContentActivity extends Activity implements OnScrollListener
 	}
 	
 	//从启动该activity的activity传过来的intent对象中获取userName和leafletId
-		private void getInfoFromLastActivity()
-		{
-			Intent intent=getIntent();
-			Bundle bundle=intent.getExtras();
-			userName=bundle.getString("user_name");
-			leafletId=bundle.getInt("leaflet_id");
-			commentCount=bundle.getInt("comment_count");
-			
-			Log.d("CommentContentActivity", "username="+userName);
-		}
+	private void getInfoFromLastActivity()
+	{
+		Intent intent=getIntent();
+		Bundle bundle=intent.getExtras();
+		userName=bundle.getString("user_name");
+		leafletId=bundle.getInt("leaflet_id");
+		commentCount=bundle.getInt("comment_count");
+
+		Log.d("CommentContentActivity", "username="+userName);
+	}
 	
 	/**
 	 * 计算当前时间和参数时间的时间差,返回XX秒钟前,XX分钟前,XX小时前,yyyy-MM-dd HH:mm

@@ -9,17 +9,13 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:background="@color/white"
         android:orientation="vertical" >
 
         <org.wheat.leaflets.widget.DashedLine
             android:id="@+id/line"
             android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="10dp" />
+            android:layout_height="1dp"/>
 
         <LinearLayout
             android:layout_width="fill_parent"

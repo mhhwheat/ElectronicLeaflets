@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -113,7 +114,7 @@ public class ImageLoader
 					int picWidth=bitmap.getWidth();
 					int picHeight=bitmap.getHeight();
 					int height = (int) (width * 1.0 / picWidth * picHeight);
-					LinearLayout.LayoutParams params=(LinearLayout.LayoutParams)imageView.getLayoutParams();
+					ViewGroup.LayoutParams params=imageView.getLayoutParams();
 					params.width=width;
 					params.height=height;
 					imageView.setLayoutParams(params);
@@ -130,7 +131,7 @@ public class ImageLoader
 					int picWidth=bitmap.getWidth();
 					int picHeight=bitmap.getHeight();
 					int height = (int) (width * 1.0 / picWidth * picHeight);
-					RelativeLayout.LayoutParams params=(RelativeLayout.LayoutParams)layout.getLayoutParams();
+					ViewGroup.LayoutParams params=layout.getLayoutParams();
 //					RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(width, height);
 					params.width=width;
 					params.height=height;
@@ -319,7 +320,7 @@ public class ImageLoader
 							int picWidth=bitmap.getWidth();
 							int picHeight=bitmap.getHeight();
 							int height = (int) (width * 1.0 / picWidth * picHeight);
-							LinearLayout.LayoutParams params=(LinearLayout.LayoutParams)imageView.getLayoutParams();
+							ViewGroup.LayoutParams params=imageView.getLayoutParams();
 							params.width=width;
 							params.height=height;
 							imageView.setLayoutParams(params);
@@ -336,7 +337,7 @@ public class ImageLoader
 							int picWidth=bitmap.getWidth();
 							int picHeight=bitmap.getHeight();
 							int height = (int) (width * 1.0 / picWidth * picHeight);
-							RelativeLayout.LayoutParams params=(RelativeLayout.LayoutParams)layout.getLayoutParams();
+							ViewGroup.LayoutParams params=layout.getLayoutParams();
 //							RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(width, height);
 							params.width=width;
 							params.height=height;

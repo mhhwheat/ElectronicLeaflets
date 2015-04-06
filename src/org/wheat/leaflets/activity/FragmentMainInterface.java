@@ -55,7 +55,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -114,7 +113,7 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new FragmentMainInterfaceListAdapter();
 		
-		new UpdateDataTask("wheat","published").execute();
+		new UpdateDataTask("abc@qq.com","published").execute();
 	}
 
 	@Override
@@ -311,12 +310,40 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 					isLoadingMore=true;
 					pbFooterLoading.setVisibility(View.VISIBLE);
 					tvFooterText.setText(R.string.list_footer_loading);
-					new LoadMoreTask(mListData.size()+1,mListData.size()+PAGE_LENGTH,"wheat","published").execute();
+					new LoadMoreTask(mListData.size()+1,mListData.size()+PAGE_LENGTH,"abc@qq.com","published").execute();
 				}
 			}
 		});
 		
 		mPullToRefreshListView.setOnScrollListener(this);
+		
+		mPullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				ReturnData<LeafletsFields> data=mListData.get(position-1);
+				Intent intent=new Intent(getActivity(),LeafletDetailActivity.class);
+				Bundle bundle=new Bundle();
+				bundle.putInt("leaflet_id", data.getPrimaryKey());
+				bundle.putString("publish_time", data.getDataFields().getUTCPublishTime());
+				bundle.putString("seller_name", data.getDataFields().getSellerName());
+				bundle.putString("start_time", data.getDataFields().getUTCStartTime());
+				bundle.putString("leaflet_path", data.getDataFields().getLeafletPath());
+				bundle.putString("brief_leaflet_path", data.getDataFields().getBriefLeafletPath());
+				bundle.putString("end_time", data.getDataFields().getUTCEndTime());
+				bundle.putInt("praise_times", data.getDataFields().getPraiseTimes());
+				bundle.putString("leaflet_type", data.getDataFields().getLeafletType());
+				bundle.putInt("comment_times", data.getDataFields().getCommentTimes());
+				bundle.putString("seller_logo_path", data.getDataFields().getSellerLogoPath());
+				bundle.putDouble("lat", data.getDataFields().getLat());
+				bundle.putDouble("lng", data.getDataFields().getLng());
+				bundle.putDouble("distance", data.getDataFields().getDistance());
+				bundle.putInt("is_praise", data.getDataFields().isPraise());
+				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+		});
 	}
 	
 	private void initialPopupWindow()

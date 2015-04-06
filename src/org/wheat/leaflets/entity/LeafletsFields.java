@@ -93,6 +93,11 @@ public class LeafletsFields
 	public void setPublishTime(String publishTime) {
 		this.publishTime = publishTime;
 	}
+	
+	public String getUTCPublishTime()
+	{
+		return this.publishTime;
+	}
 
 	public String getSellerName() {
 		return sellerName;
@@ -102,8 +107,13 @@ public class LeafletsFields
 		this.sellerName = sellerName;
 	}
 
-	public String getStartTime() {
-		return startTime;
+	public Date getStartTime() {
+		return UTCtoLocal.utc2LocalDate(this.startTime);
+	}
+	
+	public String getUTCStartTime()
+	{
+		return this.startTime;
 	}
 
 	public void setStartTime(String startTime) {
@@ -126,8 +136,13 @@ public class LeafletsFields
 		this.briefLeafletPath = briefLeafletPath;
 	}
 
-	public String getEndTime() {
+	public String getUTCEndTime() {
 		return endTime;
+	}
+	
+	public Date getEndTime()
+	{
+		return UTCtoLocal.utc2LocalDate(endTime);
 	}
 
 	public void setEndTime(String endTime) {

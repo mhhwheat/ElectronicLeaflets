@@ -27,6 +27,17 @@ public class CommentGetFields
 	private String userAvatar;
 	
 	@SerializedName("comment_user")
+	private String userName;
+	
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	@SerializedName("comment_user_nickname")
 	private String userNickName;
 	
 	@SerializedName("comment_time")

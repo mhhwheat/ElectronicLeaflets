@@ -1,160 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/lightgray"
-        android:orientation="vertical" >
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp" >
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/leaflet_detail_seller_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="广东科学中心IMAX巨幕影院"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/leaflet_detail_seller_address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="番禺区大学城西六路168号(近小谷围岛)"
-                    android:textColor="@color/gray" />
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true" />
-        </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/leaflet_detail_leaflet_img"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/test" />
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" 
-            android:layout_marginBottom="10dp"
-            android:background="@color/white">
-
-            <LinearLayout
-                android:id="@+id/leaflet_detail_comment_area"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:id="@+id/leaflet_detail_comment_button"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="5dp"
-                    android:src="@drawable/commentfull" />
-
-                <TextView
-                    android:id="@+id/leaflet_detail_comment_times"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:text="123"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/leaflet_detail_praise_area"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/leaflet_detail_comment_area"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:id="@+id/leaflet_detail_praise_button"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/praise" />
-
-                <TextView
-                    android:id="@+id/leaflet_detail_praise_times"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="456"
-                    android:textSize="15sp" />
-            </LinearLayout>
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="活动时间"
-                android:textColor="@color/black"
-                android:textSize="17sp" />
-
-            <TextView
-                android:id="@+id/leaflet_detail_activity_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="2015/04/20 12:45 -- 2015/05/11 12:45" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="活动描述"
-                android:textColor="@color/black"
-                android:textSize="17sp" />
-
-            <TextView
-                android:id="@+id/leaflet_detail_activity_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:maxLength="300"
-                android:text="抢购专场京东手机手机特价,狂欢继续!更有百款热销TOP机型,底价轰炸!京东,满59免运费,货到付款,送货上门,提供正规票据,网购就上京东"
-                android:textColor="@color/black" />
-        </LinearLayout>
-    </LinearLayout>
-
-</ScrollView>
+    <ListView
+        android:id="@+id/activity_leaflet_detail_refresh_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/listview_background_color"
+        android:cacheColorHint="@android:color/background_light"
+        android:divider="@null"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+		android:scrollbars="none"
+        android:scrollingCache="true"
+        android:stackFromBottom="false"
+        android:transcriptMode="normal"/>
+</LinearLayout>
