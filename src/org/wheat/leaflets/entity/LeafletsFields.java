@@ -83,7 +83,11 @@ public class LeafletsFields
 	@SerializedName("is_praise")
 	private int isPraise;
 	
-
+	@SerializedName("seller_address")
+	private String sellerAddress;
+	
+	@SerializedName("leaflet_description")
+	private String leafletDescription;
 	
 
 	public Date getPublishTime() {
@@ -212,6 +216,23 @@ public class LeafletsFields
 	public void setPraise(int isPraise) {
 		this.isPraise = isPraise;
 	}
+
+	public String getSellerAddress() {
+		return sellerAddress;
+	}
+
+	public void setSellerAddress(String sellerAddress) {
+		this.sellerAddress = sellerAddress;
+	}
+
+	public String getLeafletDescription() {
+		return leafletDescription;
+	}
+
+	public void setLeafletDescription(String leafletDescription) {
+		this.leafletDescription = leafletDescription;
+	}
+	
 	
 	
 }

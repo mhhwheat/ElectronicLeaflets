@@ -45,4 +45,10 @@ public class DateTools
 			return second+new String("√Î«∞");
 		}
 	}
+	
+	public static String getStringFromDate(Date date)
+	{
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		return format.format(date);
+	}
 }

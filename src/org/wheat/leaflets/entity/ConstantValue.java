@@ -17,8 +17,8 @@ package org.wheat.leaflets.entity;
 *
  */
 public class ConstantValue {
-	public static String HttpRoot="http://120.24.161.139:8000/leaflet/api/";//调试
-//	public static String HttpRoot="http://120.24.161.139:81/leaflet/api/"; //云端
+//	public static String HttpRoot="http://120.24.161.139:8000/leaflet/api/";//调试
+	public static String HttpRoot="http://120.24.161.139:81/leaflet/api/"; //云端
 	/**
 	 * 失败的人生有千百种，成功的人生只有一种（更新失败）
 	 */
@@ -65,4 +65,7 @@ public class ConstantValue {
 	
 	//重复评论
 	public static int commentRepeat=1030;
+	
+	//没有获取到更多的内容
+	public static int NO_MORE_DATA=1034;
 }

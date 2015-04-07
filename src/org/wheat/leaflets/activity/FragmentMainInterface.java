@@ -19,6 +19,7 @@ import org.wheat.leaflets.adapter.MyFollowListAdapter;
 import org.wheat.leaflets.adapter.SortingWayListAdapter;
 import org.wheat.leaflets.basic.DateTools;
 import org.wheat.leaflets.data.UserLoginPreference;
+import org.wheat.leaflets.entity.ConstantValue;
 import org.wheat.leaflets.entity.LeafletsFields;
 import org.wheat.leaflets.entity.PhotoParameters;
 import org.wheat.leaflets.entity.PraisePost;
@@ -40,6 +41,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Telephony.Sms.Conversations;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
@@ -60,6 +62,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 
 /** 
@@ -70,6 +73,8 @@ import android.widget.AbsListView.OnScrollListener;
  */
 public class FragmentMainInterface extends Fragment implements OnScrollListener
 {
+	
+	private String testUserName="abc@qq.com";
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
 	private String[] strMyFollow,strLeafletClass,strSortingWay;
 	private TextView tvMyFollow,tvLeafletClass,tvSortingWay;
@@ -113,7 +118,7 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new FragmentMainInterfaceListAdapter();
 		
-		new UpdateDataTask("abc@qq.com","published").execute();
+		new UpdateDataTask(testUserName,"published").execute();
 	}
 
 	@Override
@@ -251,7 +256,7 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 			holder.tvSellerName.setText(listItem.getDataFields().getSellerName());
 			holder.tvPublishTime.setText(DateTools.getDifferenceFromDate(listItem.getDataFields().getPublishTime()));
 			holder.tvLeafletType.setText(listItem.getDataFields().getLeafletType());
-			addTaskToPool(new PhotoParameters(listItem.getDataFields().getBriefLeafletPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true,mPhotoWidth,"secondary"), holder.ivLeafletBrief);
+			addTaskToPool(new PhotoParameters(listItem.getDataFields().getBriefLeafletPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true,mPhotoWidth,"primary"), holder.ivLeafletBrief);
 			holder.tvPraiseTimes.setText(String.valueOf(listItem.getDataFields().getPraiseTimes()));
 			if(listItem.getDataFields().isPraise()==1)
 				holder.ivPraise.setImageResource(R.drawable.praisefull);
@@ -296,7 +301,7 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 				// Update the LastUpdatedLabel
 				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 				Log.d("FragmentNeighbor", "UpdateDataTask will be executed");
-				new UpdateDataTask("wheat","published").execute();
+				new UpdateDataTask(testUserName,"published").execute();
 			}
 		});
 		
@@ -310,7 +315,7 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 					isLoadingMore=true;
 					pbFooterLoading.setVisibility(View.VISIBLE);
 					tvFooterText.setText(R.string.list_footer_loading);
-					new LoadMoreTask(mListData.size()+1,mListData.size()+PAGE_LENGTH,"abc@qq.com","published").execute();
+					new LoadMoreTask(mListData.size()+1,mListData.size()+PAGE_LENGTH,testUserName,"published").execute();
 				}
 			}
 		});
@@ -340,6 +345,8 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 				bundle.putDouble("lng", data.getDataFields().getLng());
 				bundle.putDouble("distance", data.getDataFields().getDistance());
 				bundle.putInt("is_praise", data.getDataFields().isPraise());
+				bundle.putString("seller_address", data.getDataFields().getSellerAddress());
+				bundle.putString("leaflet_description", data.getDataFields().getLeafletDescription());
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
@@ -574,11 +581,22 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 		protected void onPostExecute(LeafletsJson result) {
 			if(result!=null&&result.getCode()==1000)
 			{
-				synchronized (mListData) {
-					mListData.addAll(result.getData());
-					adapter.notifyDataSetChanged();
+				if(result.getData()!=null&&result.getData().size()>0)
+				{
+					synchronized (mListData) {
+						mListData.addAll(result.getData());
+						adapter.notifyDataSetChanged();
+					}
+					onLoadComplete(false);
 				}
-				onLoadComplete(false);
+				else
+				{
+					onLoadComplete(true);
+				}
+			}
+			else if(result!=null&&result.getCode()==ConstantValue.NO_MORE_DATA)
+			{
+				Toast.makeText(getActivity(), "没有更多内容", Toast.LENGTH_SHORT).show();
 			}
 			else
 				onLoadComplete(true);
@@ -655,7 +673,7 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 					public void run() {
 						PraisePost praisePost=new PraisePost();
 						praisePost.setLeafletId(leaflet.getPrimaryKey());
-						praisePost.setUserName(userName);
+						praisePost.setUserName(testUserName);
 						
 						PraisePostJson json=new PraisePostJson();
 						json.setData(praisePost);
@@ -679,7 +697,7 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 					@Override
 					public void run() {
 						try{
-							int returnCode=HttpUploadMethods.removePraiseRecord(leaflet.getPrimaryKey(), userName);
+							int returnCode=HttpUploadMethods.removePraiseRecord(leaflet.getPrimaryKey(), testUserName);
 							System.out.println("return code="+returnCode);
 						}catch(Exception e)
 						{

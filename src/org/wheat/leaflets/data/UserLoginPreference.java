@@ -88,7 +88,12 @@ public class UserLoginPreference
     
     public String getUserAvatar()
     {
-    	return sharedPreference.getString(USER_AVATAR, "");
+    	String avatarPath= sharedPreference.getString(USER_AVATAR, "");
+    	if(avatarPath==null||avatarPath.equals(""))
+    	{
+    		return null;
+    	}
+    	return avatarPath;
     }
     
     public void firstRun()
