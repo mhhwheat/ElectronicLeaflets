@@ -8,11 +8,13 @@ package org.wheat.leaflets.activity;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.wheat.electronicleaflets.R;
 import org.wheat.leaflets.basic.DateTools;
+import org.wheat.leaflets.basic.ExitApplication;
 import org.wheat.leaflets.basic.UTCtoLocal;
 import org.wheat.leaflets.data.UserLoginPreference;
 import org.wheat.leaflets.entity.CommentGetFields;
@@ -41,6 +43,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -55,7 +59,7 @@ import android.widget.Toast;
  * date: 2015-3-20  
  * time: 下午7:14:12
  */
-public class LeafletDetailActivity extends Activity
+public class LeafletDetailActivity extends Activity implements OnScrollListener
 {
 	private final int PAGE_LENGTH=20;//每次请求数据页里面包含的最多数据项
 	private UserLoginPreference preference;
@@ -82,16 +86,17 @@ public class LeafletDetailActivity extends Activity
 	private TextView tvCommentButton;
 	private TextView tvCommentTimes;
 	
-//	private boolean isLoadingMore=false;//防止重复开启异步加载线程
-//	private View mFooterView;
-//	private TextView tvFooterText;
-//	private ProgressBar pbFooterLoading;
+	private boolean isLoadingMore=false;//防止重复开启异步加载线程
+	private View mFooterView;
+	private TextView tvFooterText;
+	private ProgressBar pbFooterLoading;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_leaflet_detail);
+		taskPool=new HashMap<String, ImageView>();
 		mInflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		//获取设备信息
 		metric = new DisplayMetrics();
@@ -109,6 +114,25 @@ public class LeafletDetailActivity extends Activity
 		mListView.addHeaderView(mHeaderView);
 		
 		new UpdateDataTask("abc@qq.com", mLeaflet.getPrimaryKey()).execute();
+		ExitApplication.getInstance().addActivity(this);
+	}
+	
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		if(firstVisibleItem+visibleItemCount>=totalItemCount)
+		{
+			Log.d("LeafletDetailActivity", String.valueOf(firstVisibleItem));
+			if(!isLoadingMore)
+			{
+				new LoadMoreTask(mListData.size()+1,mListData.size()+PAGE_LENGTH, userName).execute();
+			}
+		}
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
 		
 	}
 	
@@ -130,6 +154,10 @@ public class LeafletDetailActivity extends Activity
 		
 		tvSellerName.setText(mLeaflet.getDataFields().getSellerName());
 		tvSellerAddress.setText(mLeaflet.getDataFields().getSellerAddress());
+		
+		ivDetailLeaflet.getViewTreeObserver().addOnGlobalLayoutListener(new GlobalLayoutLinstener(ivDetailLeaflet));
+		addTaskToPool(new PhotoParameters(mLeaflet.getDataFields().getLeafletPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true, mPhotoWidth, "secondary"), ivDetailLeaflet);
+		
 		tvLeafletLifeTime.setText(DateTools.getStringFromDate(mLeaflet.getDataFields().getStartTime())+"--"+
 				DateTools.getStringFromDate(mLeaflet.getDataFields().getEndTime()));
 		tvLeafletDescription.setText(mLeaflet.getDataFields().getLeafletDescription());
@@ -383,53 +411,53 @@ public class LeafletDetailActivity extends Activity
 //				onLoadComplete(true);
 //			else
 //				onLoadComplete(false);
-//			super.onPostExecute(result);
+			super.onPostExecute(result);
 		}	
 	}
 	
-//	private class LoadMoreTask extends AsyncTask<Void, Void, CommentGetJson>
-//	{
-//		private int offsetStart;
-//		private int offsetEnd;
-//		private String userName;
-//		
-//		public LoadMoreTask(int offsetStart,int offsetEnd,String userName)
-//		{
-//			super();
-//			this.offsetStart=offsetStart;
-//			this.offsetEnd=offsetEnd;
-//			this.userName=userName;
-//		}
-//		
-//		@Override
-//		protected CommentGetJson doInBackground(Void... params) {
-//			CommentGetJson json=null;
-//			try
-//			{
-//				json=HttpLoaderMethods.getCommentContent(userName,offsetStart, offsetEnd);
-//			}catch(Throwable e)
-//			{
-//				e.printStackTrace();
-//			}
-//			return json;
-//		}
-//
-//		@Override
-//		protected void onPostExecute(CommentGetJson result) {
-//			if(result!=null&&result.getCode()==1000)
-//			{
-//				synchronized (mListData) {
-//					mListData.addAll(result.getData());
-//					adapter.notifyDataSetChanged();
-//				}
+	private class LoadMoreTask extends AsyncTask<Void, Void, CommentGetJson>
+	{
+		private int offsetStart;
+		private int offsetEnd;
+		private String userName;
+		
+		public LoadMoreTask(int offsetStart,int offsetEnd,String userName)
+		{
+			super();
+			this.offsetStart=offsetStart;
+			this.offsetEnd=offsetEnd;
+			this.userName=userName;
+		}
+		
+		@Override
+		protected CommentGetJson doInBackground(Void... params) {
+			CommentGetJson json=null;
+			try
+			{
+				json=HttpLoaderMethods.getCommentContent(userName,offsetStart, offsetEnd);
+			}catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
+			return json;
+		}
+
+		@Override
+		protected void onPostExecute(CommentGetJson result) {
+			if(result!=null&&result.getCode()==1000)
+			{
+				synchronized (mListData) {
+					mListData.addAll(result.getData());
+					adapter.notifyDataSetChanged();
+				}
 //				onLoadComplete(false);
-//			}
-//			else
+			}
+			else
 //				onLoadComplete(true);
-//			super.onPostExecute(result);
-//		}
-//	}
-//	
+			super.onPostExecute(result);
+		}
+	}
+	
 //	/**
 //	 * 
 //	 * @param wasLoadNothing 加载完成后，是否内容没有增加,true表示内容没有增加,false表示内容增加了
@@ -537,6 +565,8 @@ public class LeafletDetailActivity extends Activity
 			taskPool.clear();
 		}
 	}
+
+	
 	
 	
 }

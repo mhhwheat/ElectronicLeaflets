@@ -122,16 +122,7 @@ public class CommentActivity extends Activity
 			public void onClick(View v) {
 				if(!etCommentContent.getText().toString().equals(""))
 				{
-					comment=new CommentPost();
-					comment.setCommentContent(etCommentContent.getText().toString());
-					comment.setCommentTime(UTCtoLocal.localDate2UTC());
-					comment.setLeafletId(leafletId);
-					comment.setUserName(userName);
 					
-					CommentPostJson json=new CommentPostJson();
-					json.setData(comment);
-					
-					new PostCommentTask(json).execute();
 				}
 			}
 		});

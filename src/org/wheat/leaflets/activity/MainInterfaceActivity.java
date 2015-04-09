@@ -9,7 +9,7 @@ package org.wheat.leaflets.activity;
 
 
 import org.wheat.electronicleaflets.R;
-import org.wheat.leaflets.activity.FragmentSlidingMenu.OnSlidingMenuItemClickListener;
+import org.wheat.leaflets.basic.ExitApplication;
 import org.wheat.leaflets.entity.MyLocation;
 
 import com.amap.api.location.AMapLocation;
@@ -42,7 +42,7 @@ import android.widget.Toast;
  * date: 2015-3-9  
  * time: ÏÂÎç8:06:32
  */
-public class MainInterfaceActivity extends FragmentActivity implements OnSlidingMenuItemClickListener ,AMapLocationListener
+public class MainInterfaceActivity extends FragmentActivity implements AMapLocationListener
 {
 	private LayoutInflater mInflater;
 	
@@ -99,6 +99,8 @@ public class MainInterfaceActivity extends FragmentActivity implements OnSliding
 		mLocationManagerProxy = LocationManagerProxy.getInstance(this);
 		mLocationManagerProxy.setGpsEnable(false);
 		mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, -1, 150, this);
+		
+		ExitApplication.getInstance().addActivity(this);
 	}
 	
 	
@@ -113,7 +115,6 @@ public class MainInterfaceActivity extends FragmentActivity implements OnSliding
 		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 		menu.setMenu(R.layout.main_interface_sliding_menu);
 		FragmentSlidingMenu slidingFragment=new FragmentSlidingMenu();
-		slidingFragment.setOnSlidingMenuItemClickListener(this);
 		getSupportFragmentManager().beginTransaction()
 		.replace(R.id.menu_frame, slidingFragment).commit();
 	}
@@ -172,22 +173,22 @@ public class MainInterfaceActivity extends FragmentActivity implements OnSliding
 
 
 
-	@Override
-	public void onItemClick(int item) {
-		switch(item)
-		{
-		case 0:
-			switchFragment(mCurrentFragment, mMainInterfaceFragment, R.id.replacing_fragment);
-			mCurrentFragment=mMainInterfaceFragment;
-			menu.toggle();
-			break;
-		case 1:
-			switchFragment(mCurrentFragment, mFollowFragment, R.id.replacing_fragment);
-			mCurrentFragment=mFollowFragment;
-			menu.toggle();
-			break;
-		}
-	}
+//	@Override
+//	public void onItemClick(int item) {
+//		switch(item)
+//		{
+//		case 0:
+//			switchFragment(mCurrentFragment, mMainInterfaceFragment, R.id.replacing_fragment);
+//			mCurrentFragment=mMainInterfaceFragment;
+//			menu.toggle();
+//			break;
+//		case 1:
+//			switchFragment(mCurrentFragment, mFollowFragment, R.id.replacing_fragment);
+//			mCurrentFragment=mFollowFragment;
+//			menu.toggle();
+//			break;
+//		}
+//	}
 
 
 	

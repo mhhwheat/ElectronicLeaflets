@@ -1,6 +1,7 @@
  package org.wheat.leaflets.activity;
 
 import org.wheat.electronicleaflets.R;
+import org.wheat.leaflets.basic.ExitApplication;
 import org.wheat.leaflets.entity.json.RegisterSellerMsgJson;
 import org.wheat.leaflets.loader.LoginAndRegister;
 
@@ -44,6 +45,8 @@ public class RegisterSellerActivity extends Activity
 				new RegisterSellerTask(etRegisterEmail.getText().toString(), etRegisterPassword.getText().toString(),etRegisterSellerName.getText().toString()).execute();
 			}
 		});
+		
+		ExitApplication.getInstance().addActivity(this);
 	}
 	
 	private class RegisterSellerTask extends AsyncTask<Void, Void, RegisterSellerMsgJson>

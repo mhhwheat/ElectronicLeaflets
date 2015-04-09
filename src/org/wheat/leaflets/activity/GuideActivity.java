@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.wheat.electronicleaflets.R;
 import org.wheat.leaflets.adapter.GuideViewPagerAdapter;
+import org.wheat.leaflets.basic.ExitApplication;
 import org.wheat.leaflets.fragment.FragmentGuideOne;
 import org.wheat.leaflets.fragment.FragmentGuideThree;
 import org.wheat.leaflets.fragment.FragmentGuideTwo;
@@ -37,6 +38,7 @@ public class GuideActivity extends FragmentActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_guide_layout);
 		initialViewPage();
+		ExitApplication.getInstance().addActivity(this);
 	}
 	
 	private void initialViewPage()

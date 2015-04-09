@@ -2,6 +2,7 @@ package org.wheat.leaflets.activity;
 
 
 import org.wheat.electronicleaflets.R;
+import org.wheat.leaflets.basic.ExitApplication;
 import org.wheat.leaflets.entity.UserName;
 import org.wheat.leaflets.entity.json.LoginMsgJson;
 import org.wheat.leaflets.entity.json.UserNameJson;
@@ -64,7 +65,7 @@ public class LoginActivity extends Activity
 			}
 		});
 		
-		
+		ExitApplication.getInstance().addActivity(this);
 	}
 	
 	

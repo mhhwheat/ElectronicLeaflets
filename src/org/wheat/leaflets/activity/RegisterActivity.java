@@ -1,5 +1,6 @@
 package org.wheat.leaflets.activity;
 import org.wheat.electronicleaflets.R;
+import org.wheat.leaflets.basic.ExitApplication;
 import org.wheat.leaflets.entity.json.RegisterMsgJson;
 import org.wheat.leaflets.entity.json.UserNameJson;
 import org.wheat.leaflets.loader.LoginAndRegister;
@@ -57,6 +58,8 @@ public class RegisterActivity extends Activity
 				}
 			}
 		});
+		
+		ExitApplication.getInstance().addActivity(this);
 	}
 	
 	/**

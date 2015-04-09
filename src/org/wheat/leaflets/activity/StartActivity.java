@@ -7,6 +7,7 @@
 package org.wheat.leaflets.activity;
 
 import org.wheat.electronicleaflets.R;
+import org.wheat.leaflets.basic.ExitApplication;
 import org.wheat.leaflets.data.UserLoginPreference;
 
 import android.app.Activity;
@@ -42,6 +43,7 @@ public class StartActivity extends Activity
 			}
 
 		}.start();
+		ExitApplication.getInstance().addActivity(StartActivity.this);
 	}
 	
 	Handler handler = new Handler() {

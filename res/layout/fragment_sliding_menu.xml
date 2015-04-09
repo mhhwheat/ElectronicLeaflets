@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="200dp"
-    android:layout_height="200dp">
+    android:layout_height="match_parent">
  
     <RelativeLayout 
         android:id="@+id/sliding_menu_user_info"
@@ -10,45 +10,51 @@
         android:layout_centerHorizontal="true">
         <org.wheat.leaflets.widget.CircleImageView 
             android:id="@+id/sliding_menu_user_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/liu"/>
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/liu"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"/>
         <TextView
             android:id="@+id/sliding_menu_user_nick_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/sliding_menu_user_avatar"
-            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/sliding_menu_user_avatar"
+            android:layout_centerHorizontal="true"
             android:text="wheat"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textColor="@color/white"/>
     </RelativeLayout>
         
-    <TextView 
-        android:id="@+id/sliding_menu_my_follow"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sliding_menu_user_info"
-        android:text="我的关注"
-        android:textSize="20sp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"/>
+
     <TextView 
         android:id="@+id/sliding_menu_setting"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sliding_menu_my_follow"
-        android:text="设置"
+        android:layout_below="@id/sliding_menu_user_info"
+        android:text="应用设置"
         android:textSize="20sp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"/>
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginTop="10dp"/>
     <TextView 
-        android:id="@+id/sliding_menu_neighbor"
+        android:id="@+id/sliding_menu_logout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/sliding_menu_setting"
-        android:text="附近"
+        android:text="注销账号"
         android:textSize="20sp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"/>
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
+    <TextView 
+        android:id="@+id/sliding_menu_exit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sliding_menu_logout"
+        android:text="退出应用"
+        android:textSize="20sp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
 </RelativeLayout>

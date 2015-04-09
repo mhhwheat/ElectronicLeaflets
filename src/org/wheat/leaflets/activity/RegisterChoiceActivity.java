@@ -2,6 +2,7 @@
 package org.wheat.leaflets.activity;
 
 import org.wheat.electronicleaflets.R;
+import org.wheat.leaflets.basic.ExitApplication;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -46,6 +47,8 @@ public class RegisterChoiceActivity extends Activity
 				startActivity(intent);
 			}
 		});
+		
+		ExitApplication.getInstance().addActivity(this);
 	}
 	
 }

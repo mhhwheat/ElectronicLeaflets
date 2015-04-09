@@ -327,6 +327,8 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
+				if(position>mListData.size())
+					return;
 				ReturnData<LeafletsFields> data=mListData.get(position-1);
 				Intent intent=new Intent(getActivity(),LeafletDetailActivity.class);
 				Bundle bundle=new Bundle();
@@ -597,6 +599,7 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 			else if(result!=null&&result.getCode()==ConstantValue.NO_MORE_DATA)
 			{
 				Toast.makeText(getActivity(), "没有更多内容", Toast.LENGTH_SHORT).show();
+				onLoadComplete(true);
 			}
 			else
 				onLoadComplete(true);
