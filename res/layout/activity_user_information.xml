@@ -1,35 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" 
+    android:orientation="vertical"
+    android:background="@color/white">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+    <FrameLayout
+        android:layout_width="80dp"
+        android:layout_height="80dp" 
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp">
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/user_info_user_avatar"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:gravity="center_horizontal" 
-            android:background="@color/skyblue">
-
-            <org.wheat.leaflets.widget.CircleImageView
-                android:id="@+id/user_info_user_avatar"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/liu" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/user_info_user_avatar"
-                android:text="wheat"
-                android:textSize="20sp" 
-                android:textColor="@color/white"/>
-        </RelativeLayout>
+            android:layout_height="match_parent" 
+            android:src="@drawable/rectangle_avatar"
+            android:background="@color/gainsboro"/>
+        
+        <ImageView 
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom|right"
+            android:src="@drawable/get_photo"
+            android:background="@color/white"/>
+    </FrameLayout>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="昵称"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"/>
+        <EditText 
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:hint="喜洋洋"/>
     </LinearLayout>
+    
+    <org.wheat.leaflets.widget.DashedLine 
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
-</ScrollView>
+</LinearLayout>

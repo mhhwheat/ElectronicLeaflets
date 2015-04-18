@@ -2,13 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/listview_background_color">  
+    android:background="@color/listview_background_color"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="fill_horizontal"
+        android:background="@drawable/title_background" 
+        android:paddingLeft="5dp">
+
+        <ImageView
+            android:id="@+id/ivfragment_Main_interface_title_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/avatar_default" />
+
+        <TextView
+            android:id="@+id/tvfragment_Main_interface_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/ivfragment_Main_interface_title_avatar"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/app_name"
+            android:textColor="@color/tab_check_color"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/middlelinearlayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content" >
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -20,7 +49,7 @@
             android:paddingTop="0dp" >
 
             <TextView
-                android:id="@+id/btFragment_main_interface_leaflet_class"
+                android:id="@+id/btFragment_main_interface_distance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/my_tab_background"
@@ -28,7 +57,7 @@
                 android:gravity="center_horizontal"
                 android:padding="10dp"
                 android:singleLine="true"
-                android:text="全部分类"
+                android:text="不限距离"
                 android:textColor="#666666" />
         </LinearLayout>
 
@@ -51,10 +80,11 @@
                 android:gravity="center_horizontal"
                 android:padding="10dp"
                 android:singleLine="true"
-                android:text="智能排序"
+                android:text="默认排序"
                 android:textColor="#666666" />
         </LinearLayout>
 
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -66,7 +96,7 @@
             android:paddingTop="0dp" >
 
             <TextView
-                android:id="@+id/btFragment_main_interface_my_follow"
+                android:id="@+id/btFragment_main_interface_leaflet_class"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/my_tab_background"
@@ -74,25 +104,27 @@
                 android:gravity="center_horizontal"
                 android:padding="10dp"
                 android:singleLine="true"
-                android:text="我的关注"
+                android:text="全部分类"
                 android:textColor="#666666" />
         </LinearLayout>
+        
     </LinearLayout>
+
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/fragment_main_interface_refresh_list_view"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" 
+        android:layout_height="fill_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@null"
         android:dividerHeight="4dp"
         android:fadingEdge="none"
         android:fastScrollEnabled="false"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
+        android:listSelector="@android:color/transparent"
         android:smoothScrollbar="true"
         ptr:ptrAnimationStyle="flip"
-        ptr:ptrDrawable="@drawable/ic_pulltorefresh_arrow"
-        android:cacheColorHint="@android:color/transparent"
-        android:listSelector="@android:color/transparent"
-        android:divider="@null"
-        />
+        ptr:ptrDrawable="@drawable/ic_pulltorefresh_arrow" />
+
 </LinearLayout>

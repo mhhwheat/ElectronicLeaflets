@@ -68,4 +68,7 @@ public class ConstantValue {
 	
 	//没有获取到更多的内容
 	public static int NO_MORE_DATA=1034;
+	
+	public static String USER_LOGIN_SUCESS="User login success!";
+	public static String SELLER_LOGIN_SUCESS="Seller login success!";
 }

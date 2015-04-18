@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.wheat.electronicleaflets.R;
+import org.wheat.leaflets.adapter.DistanceListAdapter;
 import org.wheat.leaflets.adapter.LeafletClassListAdapter;
-import org.wheat.leaflets.adapter.MyFollowListAdapter;
 import org.wheat.leaflets.adapter.SortingWayListAdapter;
 import org.wheat.leaflets.basic.DateTools;
 import org.wheat.leaflets.data.UserLoginPreference;
@@ -41,7 +41,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Telephony.Sms.Conversations;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
@@ -76,10 +75,8 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 	
 	private String testUserName="abc@qq.com";
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
-	private String[] strMyFollow,strLeafletClass,strSortingWay;
-	private TextView tvMyFollow,tvLeafletClass,tvSortingWay;
-	
-	private String userName="wheat";
+	private String[] strDistance,strLeafletClass,strSortingWay;
+	private TextView tvDistance,tvLeafletClass,tvSortingWay;
 	
 	private PullToRefreshListView mPullToRefreshListView;
 	private List<ReturnData<LeafletsFields>> mListData;//保存listview数据项的数组
@@ -95,21 +92,20 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 	
 	private DisplayMetrics metric;
 	
-	private PopupWindow pwLeafletClass,pwSortingWay,pwMyFollow;
+	private PopupWindow pwLeafletClass,pwSortingWay,pwDistance;
 	
 	private ListView lvLeafletClass;
 	private ListView lvSortingWay;
-	private ListView lvMyFollow;
+	private ListView lvDistance;
+	
+	private ImageView ivTitleAvatar;
+	private TitleAvatarListener listener;
+	
 	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		userName=UserLoginPreference.getInstance(getActivity().getApplicationContext()).getUserName();
-		if(userName.equals("")||userName==null)
-		{
-			userName="wheat";
-		}
 		//获取设备信息
 		metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -129,9 +125,11 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 		taskPool=new HashMap<String, ImageView>();
 		View view=inflater.inflate(R.layout.fragment_main_interface, container,false);
 		
-		tvMyFollow=(TextView)view.findViewById(R.id.btFragment_main_interface_my_follow);
+		tvDistance=(TextView)view.findViewById(R.id.btFragment_main_interface_distance);
 		tvLeafletClass=(TextView)view.findViewById(R.id.btFragment_main_interface_leaflet_class);
 		tvSortingWay=(TextView)view.findViewById(R.id.btFragment_main_interface_sorting_way);
+		
+		ivTitleAvatar=(ImageView)view.findViewById(R.id.ivfragment_Main_interface_title_avatar);
 		
 		initialPopupWindow();
 		
@@ -148,6 +146,17 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 		mActualListView.addFooterView(mFooterView);
 		
 		initialListViewListener();
+		
+		ivTitleAvatar.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(listener!=null)
+				{
+					listener.onTitleAvatarClicked();
+				}
+			}
+		});
 		
 		return view;
 	}
@@ -263,13 +272,6 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 			else
 				holder.ivPraise.setImageResource(R.drawable.praise);
 			
-//			int w = View.MeasureSpec.makeMeasureSpec(0,
-//	                View.MeasureSpec.UNSPECIFIED);
-//	        int h = View.MeasureSpec.makeMeasureSpec(0,
-//	                View.MeasureSpec.UNSPECIFIED);
-//	        holder.ivLeafletBrief.measure(w, h);
-//	        System.out.println("image with="+holder.ivLeafletBrief.getMeasuredHeight());
-			
 			return convertView;
 		}
 		
@@ -349,6 +351,7 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 				bundle.putInt("is_praise", data.getDataFields().isPraise());
 				bundle.putString("seller_address", data.getDataFields().getSellerAddress());
 				bundle.putString("leaflet_description", data.getDataFields().getLeafletDescription());
+				bundle.putInt("is_favourite", data.getDataFields().getIsFavourite());
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
@@ -359,15 +362,15 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 	{
 		View leafletClassView=mInflater.inflate(R.layout.fragment_main_interface_leaflet_class_pw, null,false);
 		View sortingWayView=mInflater.inflate(R.layout.fragment_main_interface_sorting_way_pw, null, false);
-		View myFollowView=mInflater.inflate(R.layout.fragment_main_interface_my_follow_pw, null, false);
+		View distanceView=mInflater.inflate(R.layout.fragment_main_interface_distance_pw, null, false);
 		
 		pwLeafletClass=new PopupWindow(leafletClassView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, true);
 		pwSortingWay=new PopupWindow(sortingWayView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, true);
-		pwMyFollow=new PopupWindow(myFollowView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, true);
+		pwDistance=new PopupWindow(distanceView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, true);
 		
 		pwLeafletClass.setAnimationStyle(R.style.popwin_anim_style);
 		pwSortingWay.setAnimationStyle(R.style.popwin_anim_style);
-		pwMyFollow.setAnimationStyle(R.style.popwin_anim_style);
+		pwDistance.setAnimationStyle(R.style.popwin_anim_style);
 		
 		leafletClassView.setOnTouchListener(new View.OnTouchListener() {
 			
@@ -381,34 +384,58 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 			}
 		});
 		
+		sortingWayView.setOnTouchListener(new View.OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if(pwSortingWay!=null&&pwSortingWay.isShowing())
+				{
+					pwSortingWay.dismiss();
+				}
+				return false;
+			}
+		});
+		
+		distanceView.setOnTouchListener(new View.OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if(pwDistance!=null&&pwDistance.isShowing())
+				{
+					pwDistance.dismiss();
+				}
+				return false;
+			}
+		});
+		
 		// 设置允许在外点击消失
 		pwLeafletClass.setOutsideTouchable(true);
 		pwSortingWay.setOutsideTouchable(true);
-		pwMyFollow.setOutsideTouchable(true);
+		pwDistance.setOutsideTouchable(true);
 		
 		// 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
 		pwLeafletClass.setFocusable(true);
 		pwSortingWay.setFocusable(true);
-		pwMyFollow.setFocusable(true);
+		pwDistance.setFocusable(true);
 		
 		//如果需要PopupWindow响应返回键，那么必须给PopupWindow设置一个背景才行
 		ColorDrawable dw = new ColorDrawable(0X50000000);
 		pwLeafletClass.setBackgroundDrawable(dw);
 		pwSortingWay.setBackgroundDrawable(dw);
-		pwMyFollow.setBackgroundDrawable(dw);
+		pwDistance.setBackgroundDrawable(dw);
 		
 		lvLeafletClass=(ListView)leafletClassView.findViewById(R.id.leaflet_class_pw_listview);
-		lvMyFollow=(ListView)myFollowView.findViewById(R.id.my_follow_pw_listview);
+		lvDistance=(ListView)distanceView.findViewById(R.id.distance_pw_listview);
 		lvSortingWay=(ListView)sortingWayView.findViewById(R.id.sorting_way_pw_listview);
 		
 		Resources res=getResources();
 		strLeafletClass=res.getStringArray(R.array.leaflet_class_string_array);
-		strMyFollow=res.getStringArray(R.array.my_follow_string_array);
+		strDistance=res.getStringArray(R.array.distance_string_array);
 		strSortingWay=res.getStringArray(R.array.sorting_way_string_array);
 		
 		lvLeafletClass.setAdapter(new LeafletClassListAdapter(strLeafletClass,mInflater));
 		lvSortingWay.setAdapter(new SortingWayListAdapter(strSortingWay, mInflater));
-		lvMyFollow.setAdapter(new MyFollowListAdapter(strMyFollow,mInflater));
+		lvDistance.setAdapter(new DistanceListAdapter(strDistance,mInflater));
 		
 		lvLeafletClass.setOnItemClickListener(new OnItemClickListener() {
 
@@ -434,15 +461,15 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 			}
 		});
 		
-		lvMyFollow.setOnItemClickListener(new OnItemClickListener() {
+		lvDistance.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parrent, View view, int position,
 					long id) {
-				TextView tv=(TextView)view.findViewById(R.id.my_follow_list_item_text);
-				tvMyFollow.setText(tv.getText().toString());
-				((MyFollowListAdapter)lvMyFollow.getAdapter()).setmSelectedItemIndex(position);
-				pwMyFollow.dismiss();
+				TextView tv=(TextView)view.findViewById(R.id.distance_list_item_text);
+				tvDistance.setText(tv.getText().toString());
+				((DistanceListAdapter)lvDistance.getAdapter()).setmSelectedItemIndex(position);
+				pwDistance.dismiss();
 			}
 		});
 		
@@ -476,21 +503,30 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 			}
 		});
 		
-		tvMyFollow.setOnClickListener(new View.OnClickListener() {
+		tvDistance.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				if(pwMyFollow.isShowing())
+				if(pwDistance.isShowing())
 				{
-					pwMyFollow.dismiss();
+					pwDistance.dismiss();
 				}else
 				{
-					pwMyFollow.showAsDropDown(v);
+					pwDistance.showAsDropDown(v);
 				}
 			}
 		});
 	}
 	
+	public interface TitleAvatarListener
+	{
+		public void onTitleAvatarClicked();
+	}
+	
+	public void setTitleAvatarListener(TitleAvatarListener listener)
+	{
+		this.listener=listener;
+	}
 	
 	
 	/**
@@ -516,7 +552,7 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 			LeafletsJson json=null;
 			try
 			{
-				json=HttpLoaderMethods.flushLeafletData(userName,sortingType);
+				json=HttpLoaderMethods.flushLeafletData("abc@qq.com",10000,"published_time","shipin");
 			}catch(Throwable e)
 			{
 				e.printStackTrace();
@@ -543,7 +579,7 @@ public class FragmentMainInterface extends Fragment implements OnScrollListener
 			if(result==null)
 				onLoadComplete(true);
 			else
-				onLoadComplete(false);
+				onLoadComplete(true);
 			
 			super.onPostExecute(result);
 		}	

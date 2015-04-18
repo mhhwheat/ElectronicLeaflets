@@ -3,4 +3,12 @@
     <integer-array name="icon_id">
         <item >@drawable/liu</item>
     </integer-array>
+    
+    <integer-array name="distance_integer_array">
+        <item >-1</item>
+        <item >1000</item>
+        <item >3000</item>
+        <item >5000</item>
+        <item >10000</item>
+    </integer-array>
 </resources>

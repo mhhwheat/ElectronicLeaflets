@@ -12,7 +12,7 @@
             android:id="@+id/sliding_menu_user_avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/liu"
+            android:src="@drawable/avatar_default"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"/>
         <TextView
@@ -23,22 +23,40 @@
             android:layout_marginTop="10dp"
             android:layout_below="@id/sliding_menu_user_avatar"
             android:layout_centerHorizontal="true"
-            android:text="wheat"
+            android:text="未登录"
             android:textSize="20sp"
             android:textColor="@color/white"/>
     </RelativeLayout>
         
 
     <TextView 
-        android:id="@+id/sliding_menu_setting"
+        android:id="@+id/sliding_menu_browse_history"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/sliding_menu_user_info"
-        android:text="应用设置"
+        android:text="浏览历史"
         android:textSize="20sp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:layout_marginTop="10dp"/>
+    <TextView 
+        android:id="@+id/sliding_menu_my_collection"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sliding_menu_browse_history"
+        android:text="我的收藏"
+        android:textSize="20sp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
+    <TextView 
+        android:id="@+id/sliding_menu_setting"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sliding_menu_my_collection"
+        android:text="应用设置"
+        android:textSize="20sp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
     <TextView 
         android:id="@+id/sliding_menu_logout"
         android:layout_width="fill_parent"

@@ -3,9 +3,15 @@ package org.wheat.leaflets.activity;
 
 import org.wheat.electronicleaflets.R;
 import org.wheat.leaflets.basic.ExitApplication;
-import org.wheat.leaflets.entity.UserName;
+import org.wheat.leaflets.data.UserLoginPreference;
+import org.wheat.leaflets.entity.ConstantValue;
+import org.wheat.leaflets.entity.PhotoParameters;
+import org.wheat.leaflets.entity.SellerPreference;
+import org.wheat.leaflets.entity.UserPreference;
 import org.wheat.leaflets.entity.json.LoginMsgJson;
-import org.wheat.leaflets.entity.json.UserNameJson;
+import org.wheat.leaflets.entity.json.SellerMsgJson;
+import org.wheat.leaflets.entity.json.UserMsgJson;
+import org.wheat.leaflets.loader.HttpLoaderMethods;
 import org.wheat.leaflets.loader.LoginAndRegister;
 
 import android.app.Activity;
@@ -34,17 +40,20 @@ public class LoginActivity extends Activity
 	private EditText etPassword;
 	private Button btLogin;
 	private TextView tvRegister;
+	
+	private UserLoginPreference sharePreference;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		System.out.println("alsdjfalskdfjasl");
 		etEmail=(EditText)findViewById(R.id.login_user_id);
 		etPassword=(EditText)findViewById(R.id.login_pwd);
 		btLogin=(Button)findViewById(R.id.btLogin);
 		tvRegister=(TextView)findViewById(R.id.tvRegister);
+		
+		sharePreference=UserLoginPreference.getInstance(getApplicationContext());
 		
 
 		btLogin.setOnClickListener(new OnClickListener() {
@@ -105,9 +114,21 @@ public class LoginActivity extends Activity
 			{
 				if(result.getCode()==1000)
 				{
-					Toast toast=Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_LONG);
-					toast.setGravity(Gravity.CENTER, 0, 0);
-					toast.show();
+//					Toast toast=Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_LONG);
+//					toast.setGravity(Gravity.CENTER, 0, 0);
+//					toast.show();
+					if(result.getMsg().equals(ConstantValue.USER_LOGIN_SUCESS))
+					{
+						new GetUserMsgTask(strEmail).execute();
+						setResult(1,null);
+						LoginActivity.this.finish();
+					}
+					else if(result.getMsg().equals(ConstantValue.SELLER_LOGIN_SUCESS))
+					{
+						new GetUserMsgTask(strEmail).execute();
+						setResult(2,null);
+						LoginActivity.this.finish();
+					}
 				}
 				if(result.getCode()==1021)
 				{
@@ -118,6 +139,83 @@ public class LoginActivity extends Activity
 			}
 		}
 		
+	}
+	
+	public class GetUserMsgTask extends AsyncTask<Void, Void, UserMsgJson>
+	{
+		private String userName;
+		
+		public GetUserMsgTask(String userName)
+		{
+			this.userName=userName;
+		}
+		
+		@Override
+		protected UserMsgJson doInBackground(Void... params) {
+			UserMsgJson json=null;
+			try
+			{
+				json=HttpLoaderMethods.getUserData(userName);
+			}catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
+			return json;
+		}
+
+		@Override
+		protected void onPostExecute(UserMsgJson result) {
+			super.onPostExecute(result);
+			if(result!=null&&result.getCode()==1000)
+			{
+				sharePreference.setLoginState(UserLoginPreference.USER_LOGIN);
+				UserPreference preference=sharePreference.getUserPreference();
+				preference.setNickName(result.getData().getDataFields().getNickName());
+				preference.setUserAvatar(result.getData().getDataFields().getUserAvatar());
+				preference.setUserEmail(result.getData().getDataFields().getUserName());
+				sharePreference.setUserPreference(preference);
+			}
+		}
+	}
+	
+	public class GetSellerMsgTask extends AsyncTask<Void, Void, SellerMsgJson>
+	{
+		private String sellerName;
+		
+		public GetSellerMsgTask(String sellerName)
+		{
+			this.sellerName=sellerName;
+		}
+
+		@Override
+		protected SellerMsgJson doInBackground(Void... params) {
+			SellerMsgJson json=null;
+			try
+			{
+				json=HttpLoaderMethods.getSellerData(sellerName);
+			}catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
+			
+			return json;
+		}
+
+		@Override
+		protected void onPostExecute(SellerMsgJson result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			if(result!=null&&result.getCode()==1000)
+			{
+				sharePreference.setLoginState(UserLoginPreference.SELLER_LOGIN);
+				SellerPreference preference=sharePreference.getSellerPreference();
+				preference.setSellerLogoPaht(result.getData().getSellerLogoPaht());
+				preference.setSellerName(result.getData().getSellerName());
+				preference.setSellerEmail(result.getData().getUserName());
+				
+				sharePreference.setSellerPreference(preference);
+			}
+		}
 	}
 	
 	

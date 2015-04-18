@@ -124,7 +124,7 @@ public class CommentContentActivity extends Activity implements OnScrollListener
 				comment.setLeafletID(leafletId);
 				comment.setCommentTime(bundle.getString("comment_time"));
 				comment.setUserNickName(userName);
-				comment.setUserAvatar(preference.getUserAvatar());
+				comment.setUserAvatar(preference.getUserPreference().getUserAvatar());
 				
 				returnData.setPrimaryKey(leafletId);
 				returnData.setDataFields(comment);

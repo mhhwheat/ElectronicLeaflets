@@ -1,8 +1,8 @@
 /** 
  * description：
  * @author wheat
- * date: 2015-3-22  
- * time: 下午9:04:11
+ * date: 2015-4-15  
+ * time: 上午12:38:42
  */ 
 package org.wheat.leaflets.adapter;
 
@@ -18,27 +18,28 @@ import android.widget.TextView;
 /** 
  * description:
  * @author wheat
- * date: 2015-3-22  
- * time: 下午9:04:11
+ * date: 2015-4-15  
+ * time: 上午12:38:42
  */
-public class SortingWayListAdapter extends BaseAdapter
+public class DistanceListAdapter extends BaseAdapter
 {
+
 	private int mSelectedItemIndex;
 	private String[] mListData;
 	private LayoutInflater mInflater;
 	
-	public SortingWayListAdapter(String[] mListData,LayoutInflater inflater)
+	public DistanceListAdapter(String[] listData,LayoutInflater inflater)
 	{
-		this.mListData=mListData;
+		this.mListData=listData;
 		this.mInflater=inflater;
 		this.mSelectedItemIndex=0;
 	}
 	
-	public SortingWayListAdapter(String[] mListData,LayoutInflater inflater,int selectedItemIndex)
+	public DistanceListAdapter(String[] listData,LayoutInflater inflater,int seletedItemIndex)
 	{
-		this.mListData=mListData;
+		this.mListData=listData;
 		this.mInflater=inflater;
-		this.mSelectedItemIndex=selectedItemIndex;
+		this.mSelectedItemIndex=seletedItemIndex;
 	}
 
 	@Override
@@ -61,10 +62,9 @@ public class SortingWayListAdapter extends BaseAdapter
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		String mListItem=mListData[position];
-		convertView=mInflater.inflate(R.layout.sorting_way_list_item, null);
-		TextView view=(TextView)convertView.findViewById(R.id.sorting_way_list_item_text);
+		convertView=mInflater.inflate(R.layout.distance_list_item, null);
+		TextView view=(TextView)convertView.findViewById(R.id.distance_list_item_text);
 		if(position==mSelectedItemIndex)
 		{
 			convertView.setBackgroundColor(0x33000000);
@@ -81,7 +81,5 @@ public class SortingWayListAdapter extends BaseAdapter
 	public void setmSelectedItemIndex(int mSelectedItemIndex) {
 		this.mSelectedItemIndex = mSelectedItemIndex;
 	}
-	
-	
 
 }

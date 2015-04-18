@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" 
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/seller_msg_seller_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="广东科学中心IMAX巨幕影院"
+            android:textColor="@color/black"
+            android:textSize="20sp" 
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:id="@+id/seller_msg_seller_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="番禺区大学城西六路168号(近小谷围岛)"
+            android:textColor="@color/gray" 
+            android:layout_gravity="center_horizontal"/>
+    </LinearLayout>
+    
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginTop="15dp">
+        <TextView 
+            android:id="@+id/seller_msg_contact_way"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="联系方式"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="5dp"/>
+        <TextView 
+            android:id="@+id/seller_msg_tel_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="电话："
+            android:layout_below="@id/seller_msg_contact_way"
+            android:layout_marginLeft="5dp"
+            />
+        <TextView 
+            android:id="@+id/seller_msg_tel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="18825162410"
+            android:layout_toRightOf="@id/seller_msg_tel_tab"
+            android:layout_below="@id/seller_msg_contact_way"
+            />
+        <TextView 
+            android:id="@+id/seller_msg_mail_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="邮箱"
+            android:layout_below="@id/seller_msg_tel_tab"
+            android:layout_marginLeft="5dp"/>
+        <TextView 
+            android:id="@+id/seller_msg_mail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1057251411@qq.com"
+            android:layout_below="@id/seller_msg_tel_tab"
+            android:layout_toRightOf="@id/seller_msg_mail_tab"
+            android:layout_marginLeft="5dp"/>
+    </RelativeLayout>
+
+</LinearLayout>

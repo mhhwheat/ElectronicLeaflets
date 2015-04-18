@@ -42,6 +42,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -86,16 +87,24 @@ public class LeafletDetailActivity extends Activity implements OnScrollListener
 	private TextView tvCommentButton;
 	private TextView tvCommentTimes;
 	
+	private ImageView ivTitleBack;
+	private ImageView ivTitleFocus;
+	
 	private boolean isLoadingMore=false;//防止重复开启异步加载线程
-	private View mFooterView;
-	private TextView tvFooterText;
-	private ProgressBar pbFooterLoading;
+//	private View mFooterView;
+//	private TextView tvFooterText;
+//	private ProgressBar pbFooterLoading;
+	
+	private boolean mLastItemVisible=false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE); 
 		setContentView(R.layout.activity_leaflet_detail);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.activity_leaflet_detail_title);
+		
 		taskPool=new HashMap<String, ImageView>();
 		mInflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		//获取设备信息
@@ -110,30 +119,97 @@ public class LeafletDetailActivity extends Activity implements OnScrollListener
 		adapter=new CommentContentListAdapter();
 		mListView.setAdapter(adapter);
 		
-		initialHeaderView();
+		initial();
 		mListView.addHeaderView(mHeaderView);
 		
 		new UpdateDataTask("abc@qq.com", mLeaflet.getPrimaryKey()).execute();
 		ExitApplication.getInstance().addActivity(this);
 	}
 	
+
+
+
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
-		if(firstVisibleItem+visibleItemCount>=totalItemCount)
-		{
-			Log.d("LeafletDetailActivity", String.valueOf(firstVisibleItem));
-			if(!isLoadingMore)
-			{
-				new LoadMoreTask(mListData.size()+1,mListData.size()+PAGE_LENGTH, userName).execute();
-			}
-		}
+		mLastItemVisible = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount - 1);
 	}
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// TODO Auto-generated method stub
+		if(scrollState == OnScrollListener.SCROLL_STATE_IDLE&&!isLoadingMore&&mLastItemVisible)
+		{
+			isLoadingMore=true;
+//			pbFooterLoading.setVisibility(View.VISIBLE);
+//			tvFooterText.setText(R.string.list_footer_loading);
+			new LoadMoreTask(mListData.size()+1,mListData.size()+PAGE_LENGTH, userName).execute();
+		}
 		
+	}
+	
+	private void initial()
+	{
+		mLeaflet=getDataFromLastActivity();
+		initialTitle();
+		initialHeaderView();
+	}
+	
+	private void initialTitle()
+	{
+		ivTitleBack=(ImageView)findViewById(R.id.leaflet_detail_title_back_img);
+		ivTitleFocus=(ImageView)findViewById(R.id.leaflet_detail_title_focus);
+		
+		ivTitleBack.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				LeafletDetailActivity.this.finish();
+			}
+		});
+		
+		ivTitleFocus.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View view) {
+				if(preference.getLoginState()==UserLoginPreference.NO_USER_LOGIN)
+				{
+					Intent intent=new Intent(LeafletDetailActivity.this,LoginActivity.class);
+					startActivity(intent);
+				}
+				else
+				{
+					if(mLeaflet!=null)
+					{
+						if(mLeaflet.getDataFields().getIsFavourite()==0)
+						{
+							ivTitleFocus.setImageResource(R.drawable.ic_star_full_white_rate_48px);
+							if(preference.getLoginState()==UserLoginPreference.SELLER_LOGIN)
+							{
+								new SetFavourite(preference.getSellerPreference().getSellerEmail(), mLeaflet.getPrimaryKey()).execute();
+							}
+							else
+							{
+								new SetFavourite(preference.getUserPreference().getUserEmail(), mLeaflet.getPrimaryKey()).execute();
+							}
+						}
+						else
+						{
+							ivTitleFocus.setImageResource(R.drawable.ic_star_white_rate_48px);
+							if(preference.getLoginState()==UserLoginPreference.SELLER_LOGIN)
+							{
+								new RemoveFavourite(preference.getSellerPreference().getSellerEmail(), mLeaflet.getPrimaryKey()).execute();
+							}
+							else
+							{
+								new RemoveFavourite(preference.getUserPreference().getUserEmail(), mLeaflet.getPrimaryKey()).execute();
+							}
+						}
+						
+						
+					}
+				}
+			}
+		});
 	}
 	
 	/**
@@ -142,7 +218,6 @@ public class LeafletDetailActivity extends Activity implements OnScrollListener
 	private void initialHeaderView()
 	{
 		mHeaderView=mInflater.inflate(R.layout.activity_leaflet_detail_header, null);
-		mLeaflet=getDataFromLastActivity();
 		tvSellerName=(TextView)mHeaderView.findViewById(R.id.leaflet_detail_seller_name);
 		tvSellerAddress=(TextView)mHeaderView.findViewById(R.id.leaflet_detail_seller_address);
 		ivDetailLeaflet=(ImageView)mHeaderView.findViewById(R.id.leaflet_detail_leaflet_img);
@@ -254,7 +329,12 @@ public class LeafletDetailActivity extends Activity implements OnScrollListener
 			data.setPraise(bundle.getInt("is_praise"));
 			data.setSellerAddress(bundle.getString("seller_address"));
 			data.setLeafletDescription(bundle.getString("leaflet_description"));
+			data.setIsFavourite(bundle.getInt("is_favourite"));
 			leaflet.setDataFields(data);
+		}
+		else
+		{
+			return null;
 		}
 		
 		return leaflet;
@@ -289,7 +369,7 @@ public class LeafletDetailActivity extends Activity implements OnScrollListener
 			if(convertView==null)
 			{
 				holder=new ViewHolder();
-				convertView=mInflater.inflate(R.layout.activity_comment_content_list_item, null);
+				convertView=mInflater.inflate(R.layout.activity_comment_content_list_item, parent,false);
 				holder.ivUserAvatar=(CircleImageView)convertView.findViewById(R.id.comment_content_user_avatar);
 				holder.tvUserNickName=(TextView)convertView.findViewById(R.id.comment_content_user_nike_name);
 				holder.tvCommentTime=(TextView)convertView.findViewById(R.id.comment_content_comment_time);
@@ -356,7 +436,7 @@ public class LeafletDetailActivity extends Activity implements OnScrollListener
 				fields.setCommentContent(comment.getData().getCommentContent());
 				fields.setCommentTime(comment.getData().getCommentTime());
 				fields.setLeafletID(mLeaflet.getPrimaryKey());
-				fields.setUserAvatar(preference.getUserAvatar());
+				fields.setUserAvatar(preference.getUserPreference().getUserAvatar());
 				fields.setUserName(userName);
 				fields.setUserNickName(userNickName);
 				commentGet.setDataFields(fields);
@@ -371,6 +451,92 @@ public class LeafletDetailActivity extends Activity implements OnScrollListener
 			super.onPostExecute(result);
 		}
 	}
+	
+	private class SetFavourite extends AsyncTask<Void, Void, Integer>
+	{
+		private String userName;
+		private int leafletId;
+		
+		public SetFavourite(String userName,int leafletId)
+		{
+			this.userName=userName;
+			this.leafletId=leafletId;
+		}
+
+		@Override
+		protected Integer doInBackground(Void... arg0) {
+			int returnCode=-1;
+			
+			try
+			{
+				returnCode=HttpUploadMethods.setFavourite(this.userName, this.leafletId);
+			}catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
+
+			
+			return returnCode;
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			super.onPostExecute(result);
+			if(result==200)
+			{
+				ivTitleFocus.setImageResource(R.drawable.ic_star_full_white_rate_48px);
+			}
+			else
+			{
+				Toast.makeText(LeafletDetailActivity.this, "收藏失败", Toast.LENGTH_SHORT).show();
+			}
+		}
+			
+	}
+	
+	
+	private class RemoveFavourite extends AsyncTask<Void, Void, Integer>
+	{
+		private String userName;
+		private int leafletId;
+		
+		public RemoveFavourite(String userName,int leafletId)
+		{
+			this.userName=userName;
+			this.leafletId=leafletId;
+		}
+
+		@Override
+		protected Integer doInBackground(Void... arg0) {
+			int returnCode=-1;
+			
+			try
+			{
+				returnCode=HttpUploadMethods.removeFavourite(this.userName, this.leafletId);
+			}catch(Throwable e)
+			{
+				e.printStackTrace();
+			}
+
+			
+			return returnCode;
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			super.onPostExecute(result);
+			if(result==200)
+			{
+				ivTitleFocus.setImageResource(R.drawable.ic_star_white_rate_48px);
+			}
+			else
+			{
+				Toast.makeText(LeafletDetailActivity.this, "取消收藏失败", Toast.LENGTH_SHORT).show();
+			}
+		}
+			
+	}
+	
 	
 	private class UpdateDataTask extends AsyncTask<Void, Void, CommentGetJson>
 	{

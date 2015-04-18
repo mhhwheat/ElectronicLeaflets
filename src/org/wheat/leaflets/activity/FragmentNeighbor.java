@@ -82,7 +82,7 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		userName=UserLoginPreference.getInstance(getActivity().getApplicationContext()).getUserName();
+		userName=UserLoginPreference.getInstance(getActivity().getApplicationContext()).getUserPreference().getUserEmail();
 		if(userName.equals("")||userName==null)
 		{
 			userName="wheat";
@@ -318,7 +318,7 @@ public class FragmentNeighbor extends Fragment implements OnScrollListener
 			LeafletsJson json=null;
 			try
 			{
-				json=HttpLoaderMethods.flushLeafletData(userName,sortingType);
+				json=HttpLoaderMethods.flushLeafletData("abc@qq.com",10000,"published_time","shipin");
 			}catch(Throwable e)
 			{
 				e.printStackTrace();

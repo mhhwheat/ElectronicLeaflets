@@ -82,7 +82,7 @@ public class FragmentFollow extends Fragment implements OnScrollListener
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		userName=UserLoginPreference.getInstance(getActivity().getApplicationContext()).getUserName();
+		userName=UserLoginPreference.getInstance(getActivity().getApplicationContext()).getUserPreference().getUserEmail();
 		//获取设备信息
 		metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);

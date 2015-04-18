@@ -8,7 +8,10 @@ package org.wheat.leaflets.activity;
 
 
 
+import java.util.ArrayList;
+
 import org.wheat.electronicleaflets.R;
+import org.wheat.leaflets.activity.FragmentMainInterface.TitleAvatarListener;
 import org.wheat.leaflets.basic.ExitApplication;
 import org.wheat.leaflets.entity.MyLocation;
 
@@ -19,21 +22,15 @@ import com.amap.api.location.LocationProviderProxy;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.PopupWindow;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 /** 
@@ -42,21 +39,17 @@ import android.widget.Toast;
  * date: 2015-3-9  
  * time: 下午8:06:32
  */
-public class MainInterfaceActivity extends FragmentActivity implements AMapLocationListener
+public class MainInterfaceActivity extends FragmentActivity implements AMapLocationListener,TitleAvatarListener
 {
 	private LayoutInflater mInflater;
 	
-	private PopupWindow popupMenu;
+//	private PopupWindow popupMenu;
 	
-	private ImageView ivMinePageButton;//跳转到我的页面的按钮
-	
-	
-	private Button btSortingType;//筛选按钮0
 	
 	private SlidingMenu menu;//侧滑菜单
 	
 	private Fragment mCurrentFragment;
-	private Fragment mMainInterfaceFragment;
+	private FragmentMainInterface mMainInterfaceFragment;
 	private Fragment mFollowFragment;
 	
 	
@@ -70,27 +63,21 @@ public class MainInterfaceActivity extends FragmentActivity implements AMapLocat
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);  
+//		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);  
+//		setContentView(R.layout.activity_main_interface);
+//		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.activity_main_interface_title);
+		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);  
 		setContentView(R.layout.activity_main_interface);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.activity_main_interface_title);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 		mInflater=(LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
-		initPopupMenu();
-		btSortingType=(Button)findViewById(R.id.btMain_interface_title_sorting_type);
-		ivMinePageButton=(ImageView)findViewById(R.id.ivMain_interface_title_me);
-		
-		btSortingType.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				popupMenu.showAsDropDown(v,-40,40);
-				popupMenu.showAtLocation(v, Gravity.BOTTOM, 0, 0);
-			}
-		});
 		
 		initialSlidingMenu();
 		
 		mMainInterfaceFragment=new FragmentMainInterface();
+		mMainInterfaceFragment.setTitleAvatarListener(this);
+		
 		mFollowFragment=new FragmentFollow();
 		switchFragment(null, mMainInterfaceFragment, R.id.replacing_fragment);
 		mCurrentFragment=mMainInterfaceFragment;
@@ -104,7 +91,9 @@ public class MainInterfaceActivity extends FragmentActivity implements AMapLocat
 	}
 	
 	
-	
+
+
+
 	private void initialSlidingMenu()
 	{
 		menu=new SlidingMenu(this);
@@ -122,20 +111,21 @@ public class MainInterfaceActivity extends FragmentActivity implements AMapLocat
 	
 	
 	
-	private void initPopupMenu()
-	{
-		View menuView=mInflater.inflate(R.layout.main_interface_popup_menu, null,false);
-		popupMenu=new PopupWindow(menuView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
-		
-		// 设置允许在外点击消失
-		popupMenu.setOutsideTouchable(true);
-		// 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
-		popupMenu.setFocusable(true);
-		
-		//如果需要PopupWindow响应返回键，那么必须给PopupWindow设置一个背景才行
-		ColorDrawable dw = new ColorDrawable(0X00000000);
-		popupMenu.setBackgroundDrawable(dw);	
-	}
+	
+//	private void initPopupMenu()
+//	{
+//		View menuView=mInflater.inflate(R.layout.main_interface_popup_menu, null,false);
+//		popupMenu=new PopupWindow(menuView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
+//		
+//		// 设置允许在外点击消失
+//		popupMenu.setOutsideTouchable(true);
+//		// 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
+//		popupMenu.setFocusable(true);
+//		
+//		//如果需要PopupWindow响应返回键，那么必须给PopupWindow设置一个背景才行
+//		ColorDrawable dw = new ColorDrawable(0X00000000);
+//		popupMenu.setBackgroundDrawable(dw);	
+//	}
 	
 	
 	/**
@@ -248,6 +238,33 @@ public class MainInterfaceActivity extends FragmentActivity implements AMapLocat
 			}
 			return true;
 		}
+
+
+
+
+
+		@Override
+		public void onTitleAvatarClicked() {
+			menu.toggle();
+		}
+		
+//		private ArrayList<OnActivityResultListener> onActivityResultListeners=new ArrayList<MainInterfaceActivity.OnActivityResultListener>();
+//		
+//		public interface OnActivityResultListener
+//		{
+//			public void onMyActivityResult(int requestCode, int resultCode, Intent data);
+//		}
+//		
+//		public void addOnActivityResultListener(OnActivityResultListener listenr)
+//		{
+//			onActivityResultListeners.add(listenr);
+//		}
+//		
+//		public void removeOnActivityResultListener(OnActivityResultListener listenr)
+//		{
+//			onActivityResultListeners.remove(listenr);
+//		}
+		
 	
 //	/** 
 //	 * 以下的几个方法用来，让fragment能够监听touch事件 

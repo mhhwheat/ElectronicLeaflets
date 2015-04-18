@@ -7,8 +7,11 @@
 package org.wheat.leaflets.loader;
 
 import org.wheat.leaflets.entity.ConstantValue;
+import org.wheat.leaflets.entity.json.BrowseHistoryJson;
 import org.wheat.leaflets.entity.json.CommentGetJson;
 import org.wheat.leaflets.entity.json.LeafletsJson;
+import org.wheat.leaflets.entity.json.SellerMsgJson;
+import org.wheat.leaflets.entity.json.UserMsgJson;
 import org.wheat.leaflets.httptools.BitmapTools;
 import org.wheat.leaflets.httptools.HttpConnectTools;
 import org.wheat.leaflets.httptools.JsonTools;
@@ -60,12 +63,12 @@ public class HttpLoaderMethods
 	 * @return
 	 * @throws Exception
 	 */
-	public static LeafletsJson flushLeafletData(String username,String orderRule) throws Throwable
+	public static LeafletsJson flushLeafletData(String username,int distance,String sortingWay,String leafletType) throws Throwable
 	{
-		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"flush_leaflet_data?username="+username+"&order_rule="+orderRule, null);
-//		Log.d("HttpLoaderMethods", json);
+		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"flush_leaflet_data?username="+username+"&rule_distance="+distance+"&rule_time="+sortingWay+"&rule_type="+leafletType, null);
 		if(json==null)
 			return null;
+//		Log.d("HttpLoaderMethod", "LeafletJson :"+json);
 		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), LeafletsJson.class);
 	}
 	
@@ -83,6 +86,7 @@ public class HttpLoaderMethods
 		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"get_leaflet_data?username="+username+"&offset_begin="+offset_begin+"&offset_end="+offset_end+"&order_rule="+order_rule, null);
 		if(json==null)
 			return null;
+		
 		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), LeafletsJson.class);
 	}
 	
@@ -104,5 +108,59 @@ public class HttpLoaderMethods
 		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), CommentGetJson.class);
 	}
 	
+	public static BrowseHistoryJson getBrowseHistory(String userName) throws Throwable
+	{
+		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"get_history?username="+userName, null);
+		if(json==null)
+			return null;
+		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), BrowseHistoryJson.class);
+	}
+	
+	public static UserMsgJson getUserData(String userName) throws Throwable
+	{
+		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"get_user_data?username="+userName, null);
+		if(json==null)
+			return null;
+		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), UserMsgJson.class);
+	}
+	
+	public static SellerMsgJson getSellerData(String sellerName) throws Throwable
+	{
+		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"get_seller_data?userName="+sellerName, null);
+		if(json==null)
+			return null;
+		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), SellerMsgJson.class);
+	}
+	
+	public static LeafletsJson getMyCollection(String userName,int offsetBegin,int offsetEnd) throws Throwable
+	{
+		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"get_favourite?"+"username="+userName+"&offset_begin="+offsetBegin+"&offset_end="+offsetEnd, null);
+		
+		if(json==null)
+			return null;
+		Log.d("HttpLoaderMethod", json);
+		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), LeafletsJson.class);
+	}
+	
+	public static LeafletsJson getSellerleaflets(String userName) throws Throwable
+	{
+
+		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"get_seller_leaflet?"+"username="+userName, null);
+		
+		if(json==null)
+			return null;
+		
+		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), LeafletsJson.class);
+	}
+	
+	public static LeafletsJson flushMyCollection(String userName) throws Throwable
+	{
+		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"flush_favourite?"+"username="+userName, null);
+
+		if(json==null)
+			return null;
+		Log.d("HttpLoaderMethod", json);
+		return JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), LeafletsJson.class);
+	}
 	
 }

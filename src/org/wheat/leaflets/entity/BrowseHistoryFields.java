@@ -1,8 +1,8 @@
 /** 
  * description：
  * @author wheat
- * date: 2015-3-6  
- * time: 下午7:26:14
+ * date: 2015-4-10  
+ * time: 下午2:49:59
  */ 
 package org.wheat.leaflets.entity;
 
@@ -15,10 +15,10 @@ import com.google.gson.annotations.SerializedName;
 /** 
  * description:
  * @author wheat
- * date: 2015-3-6  
- * time: 下午7:26:14
+ * date: 2015-4-10  
+ * time: 下午2:49:59
  */
-public class LeafletsFields
+public class BrowseHistoryFields 
 {
 	@SerializedName("published_time")
 	private String publishTime;
@@ -89,8 +89,8 @@ public class LeafletsFields
 	@SerializedName("leaflet_description")
 	private String leafletDescription;
 	
-	@SerializedName("is_favourite")
-	private int isFavourite;
+	@SerializedName("browse_time")
+	private String browseTime;
 	
 
 	public Date getPublishTime() {
@@ -235,15 +235,19 @@ public class LeafletsFields
 	public void setLeafletDescription(String leafletDescription) {
 		this.leafletDescription = leafletDescription;
 	}
-
-	public int getIsFavourite() {
-		return isFavourite;
-	}
-
-	public void setIsFavourite(int isFavourite) {
-		this.isFavourite = isFavourite;
+	
+	public void setBrowseTime(String time)
+	{
+		this.browseTime=time;
 	}
 	
+	public String getUTCBrowseTime()
+	{
+		return this.browseTime;
+	}
 	
-	
+	public Date getBrowseTime()
+	{
+		return UTCtoLocal.utc2LocalDate(browseTime);
+	}
 }

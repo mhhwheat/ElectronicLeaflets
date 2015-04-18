@@ -6,24 +6,24 @@
     android:background="@drawable/title_background" >
 
     <ImageView
-        android:id="@+id/ivMain_interface_title_logo"
+        android:id="@+id/seller_msg_title_back_img"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:src="@drawable/logo"/>
+        android:src="@drawable/ic_left_back"/>
 
     <TextView
-        android:id="@+id/tvMain_interface_title_text"
+        android:id="@+id/seller_msg_title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/ivMain_interface_title_logo"
+        android:layout_toRightOf="@id/seller_msg_title_back_img"
         android:gravity="center"
         android:singleLine="true"
-        android:text="@string/app_name"
-        android:textColor="@color/tab_check_color"
+        android:text="商家信息"
+        android:textColor="@color/white"
         android:textSize="20sp" />
   
 </RelativeLayout>  

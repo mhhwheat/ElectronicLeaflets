@@ -71,7 +71,6 @@ public class LeafletClassListAdapter extends BaseAdapter
 		TextView view=(TextView)convertView.findViewById(R.id.leaflet_class_list_item_text);
 		if(position==selectedItemIndex)
 		{
-			Log.d("test", "test");
 			convertView.setBackgroundColor(0x33000000);
 			view.setTextColor(0xFFFFFFE0);
 		}

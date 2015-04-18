@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="my_follow_string_array">
-        <item >全部传单</item>
-        <item >我的关注</item>
+    <string-array name="distance_string_array">
+        <item >不限距离</item>
+        <item >1千米</item>
+        <item >3千米</item>
+        <item >5千米</item>
+        <item >10千米</item>
     </string-array>
     
     <string-array name="sorting_way_string_array">
-        <item >智能排序</item>
-        <item >离我最近</item>
+        <item >默认排序</item>
         <item >即将开始</item>
         <item >即将结束</item>
         <item >新发布</item>
+    </string-array>
+    
+    <string-array name="string_array_sorting_way">
+        <item >published_time</item>
+        <item >start_time</item>
+        <item >end_time</item>
+        <item >published_time</item>
     </string-array>
     
     <string-array name="leaflet_class_string_array">
@@ -19,5 +28,13 @@
         <item >电影</item>
         <item >购物</item>
         <item >休闲娱乐</item>
+    </string-array>
+    
+    <string-array name="string_array_leaflet_class">
+        <item >全部分类</item>
+        <item >meishi</item>
+        <item >dianyin</item>
+        <item >gouwu</item>
+        <item >yule</item>
     </string-array>
 </resources>
